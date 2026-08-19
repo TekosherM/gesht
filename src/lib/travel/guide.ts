@@ -17,12 +17,12 @@ export const askGuide = createServerFn({ method: "POST" })
     if (!apiKey) return fallback;
 
     const prompt = data.question?.trim()
-      ? `You are Karwan Guide, a concise local travel brief for Iraq and the Kurdistan Region (KRG).
+      ? `You are Gesht Guide, a concise local travel brief for Iraq and the Kurdistan Region (KRG).
 Route: ${data.from ?? "unspecified"} → ${data.to}. Mode: ${data.mode}.
 Answer this traveler question in at most 120 words. Plain prose, no markdown headings, no emoji.
 If you are unsure, say what to verify (visa, checkpoint, airline) instead of guessing.
 Question: ${data.question}`
-      : `You are Karwan Guide, a concise local travel brief for Iraq and the Kurdistan Region (KRG).
+      : `You are Gesht Guide, a concise local travel brief for Iraq and the Kurdistan Region (KRG).
 Write four short labeled blocks exactly in this shape:
 DESTINATION: (70-90 words on ${data.to})
 JOURNEY: (70-90 words on traveling by ${data.mode} from ${data.from ?? "the origin"} to ${data.to})

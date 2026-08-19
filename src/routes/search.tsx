@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Atmosphere } from "@/components/atmosphere";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ResultBoard } from "@/components/results/result-board";
@@ -40,28 +41,31 @@ function SearchPage() {
 
   useEffect(() => {
     setLoading(true);
-    const t = window.setTimeout(() => setLoading(false), 220);
+    const t = window.setTimeout(() => setLoading(false), 1480);
     return () => window.clearTimeout(t);
   }, [params.mode, params.to, params.from, params.depart, params.returnDate]);
 
   return (
-    <div className="min-h-screen bg-bg text-fg">
-      <SiteHeader solid />
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        <SearchConsole initial={query} compact />
-        <div className="mt-8">
-          <ResultBoard
-            query={query}
-            loading={loading}
-            onMode={(mode) => {
-              void navigate({
-                search: (prev) => ({ ...prev, mode }),
-              });
-            }}
-          />
-        </div>
-      </main>
-      <SiteFooter />
+    <div className="relative min-h-screen overflow-hidden bg-bg text-fg">
+      <Atmosphere />
+      <div className="relative z-10">
+        <SiteHeader solid />
+        <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+          <SearchConsole initial={query} compact />
+          <div className="mt-8">
+            <ResultBoard
+              query={query}
+              loading={loading}
+              onMode={(mode) => {
+                void navigate({
+                  search: (prev) => ({ ...prev, mode }),
+                });
+              }}
+            />
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
     </div>
   );
 }

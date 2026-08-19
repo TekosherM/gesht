@@ -1,6 +1,7 @@
 import { Compass, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AgentGuide } from "@/components/guide/agent-guide";
+import { RouteArc, SourceSweep } from "@/components/live-bits";
 import { ResultCard } from "@/components/results/result-cards";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,21 +34,31 @@ export function ResultBoard({
 
   const dest = getPlace(query.to);
   const origin = query.from ? getPlace(query.from) : undefined;
+  const fromCode = origin?.iata ?? origin?.name ?? "—";
+  const toCode = dest?.iata ?? dest?.name ?? "—";
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div>
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
+          <div className="min-w-0 flex-1">
             <p className="text-xs font-medium tracking-wide text-faint uppercase">
               {modeMeta[query.mode].label}
             </p>
-            <h1 className="font-display text-3xl tracking-tight sm:text-4xl">
-              {origin ? `${origin.name} to ${dest?.name}` : dest?.name}
-            </h1>
+            {origin && dest ? (
+              <div className="mt-2 max-w-md">
+                <RouteArc
+                  from={fromCode}
+                  to={toCode}
+                  meta={`${origin.name} → ${dest.name}`}
+                />
+              </div>
+            ) : (
+              <h1 className="font-display text-3xl tracking-tight sm:text-4xl">{dest?.name}</h1>
+            )}
             <p className="mt-1 text-sm text-muted">
               {loading
-                ? "Comparing sources…"
+                ? "Sweeping sources…"
                 : sorted.length
                   ? `${sorted.length} option${sorted.length === 1 ? "" : "s"}`
                   : "Nothing listed for this pair yet — try another city or mode."}
@@ -74,6 +85,13 @@ export function ResultBoard({
           </div>
         </div>
 
+        <div className="mt-4 rounded-xl bg-surface/80 p-3 shadow-border">
+          <p className="mb-2 text-[11px] font-medium tracking-wide text-faint uppercase">
+            Source sweep
+          </p>
+          <SourceSweep running={loading} />
+        </div>
+
         {alts.length ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {alts.map((a) => (
@@ -81,7 +99,7 @@ export function ResultBoard({
                 key={a.mode}
                 type="button"
                 onClick={() => onMode(a.mode)}
-                className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium shadow-border hover:shadow-border-hover"
+                className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium shadow-border transition-[box-shadow,transform] duration-200 hover:shadow-border-hover"
               >
                 {a.label}
                 <span className="ml-1.5 text-muted">{a.detail}</span>
@@ -147,7 +165,7 @@ function SortChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "h-8 rounded-[6px] px-3 text-xs font-medium",
+        "h-8 rounded-[6px] px-3 text-xs font-medium transition-colors",
         active ? "bg-surface text-fg shadow-border" : "text-muted",
       )}
     >

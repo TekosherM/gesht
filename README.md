@@ -1,6 +1,8 @@
-# Karwan
+# Gesht · گەشت
 
-Metasearch for Iraq and the Kurdistan Region — flights, hotels, buses, cars, and packages, with a local travel brief.
+Travel metasearch for Iraq and the Kurdistan Region — flights, hotels, buses, cars, and packages, with a local brief.
+
+**گەشت** means *travel* in Kurdish.
 
 ## Develop
 

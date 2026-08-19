@@ -44,7 +44,7 @@ function FlightCard({ offer }: { offer: FlightOffer }) {
   const to = getPlace(offer.to);
   const low = cheapest(offer.sources);
   return (
-    <Card className="p-4 sm:p-5">
+    <Card className="p-4 hover-lift sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 text-sm text-muted">
@@ -74,7 +74,7 @@ function FlightCard({ offer }: { offer: FlightOffer }) {
 function HotelCard({ offer, query }: { offer: HotelOffer; query: SearchQuery }) {
   const nights = nightsBetween(query.depart, query.returnDate);
   return (
-    <Card className="p-4 sm:p-5">
+    <Card className="p-4 hover-lift sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-sm text-muted">
@@ -109,7 +109,7 @@ function BusCard({ offer }: { offer: BusOffer }) {
   const to = getPlace(offer.to);
   const low = cheapest(offer.sources);
   return (
-    <Card className="p-4 sm:p-5">
+    <Card className="p-4 hover-lift sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-sm text-muted">
@@ -139,7 +139,7 @@ function CarCard({ offer }: { offer: CarOffer }) {
   const from = getPlace(offer.from);
   const to = getPlace(offer.to);
   return (
-    <Card className="p-4 sm:p-5">
+    <Card className="p-4 hover-lift sm:p-5">
       <div className="flex items-center gap-2 text-sm text-muted">
         <CarFront className="size-3.5" />
         <span>
@@ -167,7 +167,7 @@ function CarCard({ offer }: { offer: CarOffer }) {
 
 function PackageCard({ offer }: { offer: PackageOffer }) {
   return (
-    <Card className="p-4 sm:p-5">
+    <Card className="p-4 hover-lift sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
         <div>
           <p className="text-xs font-medium tracking-wide text-faint uppercase">{offer.season}</p>

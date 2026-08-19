@@ -3,7 +3,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { AuthProvider } from "@/lib/auth/provider";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "Karwan";
+const APP_NAME = "Gesht";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -11,10 +11,11 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: APP_NAME },
-      { name: "theme-color", content: "#f3f1ec" },
+      { name: "theme-color", content: "#f6f0e4" },
       {
         name: "description",
-        content: "Metasearch for Iraq and the Kurdistan Region — flights, hotels, buses, cars, and packages.",
+        content:
+          "Gesht (گەشت) — metasearch for Iraq and the Kurdistan Region. Flights, hotels, buses, cars, and packages.",
       },
     ],
     links: [
@@ -24,7 +25,7 @@ export const Route = createRootRoute({
       { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap",
       },
     ],
   }),

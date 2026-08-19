@@ -677,7 +677,7 @@ export const buses: BusOffer[] = [
     seat: "VIP coach",
     sources: [
       { source: "Station", usd: 14 },
-      { source: "Karwan", usd: 16 },
+      { source: "Gesht", usd: 16 },
     ],
   },
   {
@@ -716,7 +716,7 @@ export const buses: BusOffer[] = [
     seat: "VIP coach",
     sources: [
       { source: "Station", usd: 22 },
-      { source: "Karwan", usd: 25 },
+      { source: "Gesht", usd: 25 },
     ],
   },
   {

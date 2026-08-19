@@ -110,7 +110,7 @@ export function SearchConsole({
   return (
     <section
       className={cn(
-        "w-full rounded-2xl bg-surface p-3 shadow-lift sm:p-4",
+        "w-full rounded-2xl bg-surface/90 p-3 shadow-lift backdrop-blur-sm sm:p-4",
         compact && "shadow-border",
       )}
     >

@@ -150,7 +150,7 @@ export function curatedBrief(
 
   const destination =
     city?.about ??
-    `${dest?.name ?? "This city"} is on the Karwan map. Treat the guide as a starting brief, then confirm visas and the day’s security note.`;
+    `${dest?.name ?? "This city"} is on the Gesht map. Treat the guide as a starting brief, then confirm visas and the day’s security note.`;
 
   const journeyBits = [travel.body];
   if (origin && dest) {

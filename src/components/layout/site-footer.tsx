@@ -2,9 +2,13 @@ import { Link } from "@tanstack/react-router";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
+    <footer className="relative border-t border-line">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p>Karwan compares Iraq and Kurdistan travel — flights, rooms, coaches, and the road.</p>
+        <p>
+          <span className="font-display text-fg">Gesht</span>
+          <span className="mx-2 text-faint">گەشت</span>
+          compares Iraq and Kurdistan travel — flights, rooms, coaches, and the road.
+        </p>
         <div className="flex gap-4">
           <Link to="/" className="hover:text-fg">
             Search

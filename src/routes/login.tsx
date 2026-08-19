@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { KarwanMark } from "@/components/layout/site-header";
+import { Atmosphere } from "@/components/atmosphere";
+import { GeshtMark } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
 
@@ -7,13 +8,17 @@ export const Route = createFileRoute("/login")({ component: Login });
 
 function Login() {
   return (
-    <main className="grid min-h-screen place-items-center bg-bg px-6 text-fg">
-      <div className="w-full max-w-sm">
-        <Link to="/" className="mb-8 flex items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-md bg-primary text-primary-fg">
-            <KarwanMark className="size-4" />
+    <main className="relative grid min-h-screen place-items-center overflow-hidden bg-bg px-6 text-fg">
+      <Atmosphere />
+      <div className="relative z-10 w-full max-w-sm rise-in">
+        <Link to="/" className="mb-8 flex items-center gap-2.5">
+          <span className="grid size-8 place-items-center rounded-full bg-primary text-primary-fg">
+            <GeshtMark className="size-4" />
           </span>
-          <span className="font-display text-xl">Karwan</span>
+          <span className="leading-none">
+            <span className="block font-display text-xl">Gesht</span>
+            <span className="block text-[11px] tracking-[0.18em] text-muted">گەشت</span>
+          </span>
         </Link>
         <h1 className="font-display text-3xl tracking-tight">Sign in</h1>
         <p className="mt-2 text-sm text-muted">

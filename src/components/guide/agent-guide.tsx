@@ -72,7 +72,7 @@ export function AgentGuide({
   return (
     <aside
       className={cn(
-        "flex flex-col rounded-xl bg-surface shadow-border",
+        "flex flex-col rounded-2xl bg-surface/90 shadow-border backdrop-blur-sm",
         open ? "flex" : "hidden lg:flex",
       )}
     >
@@ -82,7 +82,7 @@ export function AgentGuide({
             <Compass className="size-3.5" />
           </span>
           <div>
-            <p className="text-sm font-medium">Karwan Guide</p>
+            <p className="text-sm font-medium">Gesht Guide</p>
             <p className="text-[11px] text-faint">
               {dest?.name}
               {brief.source === "live" ? " · live brief" : " · local brief"}
