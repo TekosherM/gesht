@@ -409,6 +409,11 @@
     animation: none !important;
   }
 
+  video[autoplay],
+  .group video {
+    display: none !important;
+  }
+
   .hover-lift:hover {
     transform: none;
   }

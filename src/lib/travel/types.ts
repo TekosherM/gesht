@@ -23,6 +23,7 @@ export type Place = {
   lng: number;
   blurb: string;
   image?: string;
+  video?: string;
   featured?: boolean;
   focus?: PlaceFocus[];
 };

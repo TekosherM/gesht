@@ -12,6 +12,7 @@ export const places: Place[] = [
     lng: 44.0092,
     blurb: "The citadel city and the easiest air gateway into the Kurdistan Region.",
     image: "/destinations/erbil.jpg",
+    video: "/destinations/erbil.mp4",
     featured: true,
     focus: ["weekend", "medical"],
   },
@@ -26,6 +27,7 @@ export const places: Place[] = [
     lng: 45.43,
     blurb: "Cultural capital of the KRG — mountains, cafes, and a second international airport.",
     image: "/destinations/sulaymaniyah.jpg",
+    video: "/destinations/sulaymaniyah.mp4",
     featured: true,
     focus: ["hike", "weekend", "medical"],
   },
@@ -53,6 +55,7 @@ export const places: Place[] = [
     lng: 44.3661,
     blurb: "The Tigris capital — museums, river cafes, and the main federal gateway.",
     image: "/destinations/baghdad.jpg",
+    video: "/destinations/baghdad.mp4",
     featured: true,
     focus: ["weekend", "medical"],
   },
@@ -167,6 +170,7 @@ export const places: Place[] = [
     lng: 44.321,
     blurb: "Hill town 50 minutes from Erbil — orchards, weekend villas, easy walks.",
     image: "/destinations/shaqlawa.jpg",
+    video: "/destinations/shaqlawa.mp4",
     focus: ["hike", "weekend"],
   },
   {
@@ -179,6 +183,7 @@ export const places: Place[] = [
     lng: 44.46,
     blurb: "Ridge above Rawanduz with a cable car, chalets, and high trails.",
     image: "/destinations/korek.jpg",
+    video: "/destinations/korek.mp4",
     focus: ["hike", "weekend"],
   },
   {
@@ -191,6 +196,7 @@ export const places: Place[] = [
     lng: 44.45,
     blurb: "The waterfall gorge on Hamilton Road — the KRG’s classic day hike.",
     image: "/destinations/gali-ali-beg.jpg",
+    video: "/destinations/gali-ali-beg.mp4",
     focus: ["hike"],
   },
   {
@@ -203,6 +209,7 @@ export const places: Place[] = [
     lng: 44.958,
     blurb: "Lake town between Erbil and Slemani — villas, swimming, Friday traffic.",
     image: "/destinations/dukan.jpg",
+    video: "/destinations/dukan.mp4",
     focus: ["weekend"],
   },
   {

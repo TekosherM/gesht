@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Footprints, HeartPulse, House, Plane } from "lucide-react";
 import type { ReactNode } from "react";
 import { Atmosphere } from "@/components/atmosphere";
+import { DestinationMedia } from "@/components/destination-media";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { LiveTicker } from "@/components/live-bits";
@@ -19,6 +20,10 @@ import type { Place, TravelMode } from "@/lib/travel/types";
 export const Route = createFileRoute("/")({ component: Home });
 
 const HEADLINE = ["Search the", "next place", "you actually", "want to go."];
+
+function preferMotion(places: Place[]) {
+  return [...places].sort((a, b) => Number(Boolean(b.video)) - Number(Boolean(a.video)));
+}
 
 function Home() {
   return (
@@ -75,7 +80,7 @@ function Home() {
             kicker="Hiking trips"
             title="Zagros trails and gorge days"
             lede="Gali Ali Beg on a weekday morning. Korek on the ridge. Halgurd if you actually mean a mountain."
-            places={hikeDestinations.filter((p) => p.image)}
+            places={preferMotion(hikeDestinations.filter((p) => p.image))}
             mode="hiking"
             fallbackImage="/destinations/gali-ali-beg.jpg"
           />
@@ -85,7 +90,7 @@ function Home() {
             kicker="Weekends nearby"
             title="Villas, apartments, Friday houses"
             lede="Erbil empties toward Shaqlawa and Dukan. Slemani walks Salim Street. Baghdad takes a Jadriya flat."
-            places={weekendDestinations.filter((p) => p.image)}
+            places={preferMotion(weekendDestinations.filter((p) => p.image))}
             mode="weekends"
           />
 
@@ -96,6 +101,7 @@ function Home() {
             lede="Erbil and Slemani inbound. Baghdad by referral. Istanbul and Amman when the campus needs to be larger."
             places={medicalDestinations.filter((p) => p.image)}
             mode="medical"
+            still
             fallbackImage="/destinations/erbil.jpg"
           />
 
@@ -138,6 +144,7 @@ function PlaceSection({
   places,
   mode,
   fallbackImage,
+  still = false,
 }: {
   id: string;
   kicker: string;
@@ -146,6 +153,7 @@ function PlaceSection({
   places: Place[];
   mode: TravelMode;
   fallbackImage?: string;
+  still?: boolean;
 }) {
   return (
     <section id={id} className="border-t border-line/60">
@@ -176,15 +184,10 @@ function PlaceSection({
               }}
               className={`group relative isolate overflow-hidden rounded-xl bg-sunken shadow-border hover-lift rise-in stagger-${i + 1}`}
             >
-              {place.image || fallbackImage ? (
-                <img
-                  src={place.image ?? fallbackImage}
-                  alt=""
-                  className="aspect-16/10 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-                />
-              ) : (
-                <div className="aspect-16/10 w-full bg-sunken" />
-              )}
+              <DestinationMedia
+                image={place.image ?? fallbackImage}
+                video={still ? undefined : place.video}
+              />
               <div className="absolute inset-0 bg-linear-to-t from-fg/75 via-fg/15 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-4 text-primary-fg">
                 <p className="font-display text-2xl tracking-tight">{place.name}</p>
