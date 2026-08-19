@@ -4,6 +4,9 @@ import {
   ArrowLeftRight,
   Bus,
   CarFront,
+  Footprints,
+  HeartPulse,
+  Home,
   Hotel,
   Luggage,
   Plane,
@@ -26,6 +29,9 @@ const modes: { id: TravelMode; icon: typeof Plane }[] = [
   { id: "packages", icon: Luggage },
   { id: "bus", icon: Bus },
   { id: "car", icon: CarFront },
+  { id: "hiking", icon: Footprints },
+  { id: "weekends", icon: Home },
+  { id: "medical", icon: HeartPulse },
 ];
 
 export function SearchConsole({
@@ -48,10 +54,15 @@ export function SearchConsole({
   const needsFrom = modeMeta[draft.mode].needsFrom;
 
   const prompt = useMemo(() => {
-    if (step === "to") return "Where do you want to go?";
+    if (step === "to") {
+      if (draft.mode === "hiking") return "Which mountain or trail?";
+      if (draft.mode === "weekends") return "Where for the weekend?";
+      if (draft.mode === "medical") return "Where do you need care?";
+      return "Where do you want to go?";
+    }
     if (step === "from") return "Where from?";
     return "When are you traveling?";
-  }, [step]);
+  }, [step, draft.mode]);
 
   function setMode(mode: TravelMode) {
     setDraft((d) => ({ ...d, mode }));
@@ -171,7 +182,13 @@ export function SearchConsole({
                 ? "We’ll measure the road — kilometres, hours, fuel, checkpoints."
                 : draft.mode === "hotels"
                   ? "Pick a city. Dates next. Budget pensions in the KRG are often walk-in."
-                  : "Kurdistan Region, Federal Iraq, or a gateway city."}
+                  : draft.mode === "hiking"
+                    ? "Zagros trails and gorge walks. Start with the mountain — we attach a guide and a pickup city."
+                    : draft.mode === "weekends"
+                      ? "Villas and apartments for the Thursday–Saturday empty-out. Shaqlawa, Dukan, Korek, or a city flat."
+                      : draft.mode === "medical"
+                        ? "Hospitals in Erbil, Slemani, Baghdad — or outbound desks in Istanbul and Amman."
+                        : "Kurdistan Region, Federal Iraq, or a gateway city."}
             </p>
           </div>
 
@@ -276,7 +293,17 @@ function WhenStep({
 
       <div className="grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
         <PlaceChip
-          kicker={needsFrom ? "From" : "Staying in"}
+          kicker={
+            draft.mode === "hiking"
+              ? "Trail"
+              : draft.mode === "weekends"
+                ? "Outing"
+                : draft.mode === "medical"
+                  ? "Care in"
+                  : needsFrom
+                    ? "From"
+                    : "Staying in"
+          }
           place={needsFrom ? origin : dest}
           onClick={needsFrom ? onFrom : onTo}
         />
@@ -290,7 +317,13 @@ function WhenStep({
 
       <div className="grid gap-3 sm:grid-cols-2">
         <DateField
-          label={draft.mode === "hotels" ? "Check-in" : "Depart"}
+          label={
+            draft.mode === "hotels" || draft.mode === "weekends"
+              ? "Check-in"
+              : draft.mode === "medical"
+                ? "First clinic day"
+                : "Depart"
+          }
           value={draft.depart}
           onChange={(depart) =>
             setDraft((d) => ({
@@ -303,7 +336,13 @@ function WhenStep({
         />
         {draft.mode !== "bus" && draft.mode !== "car" ? (
           <DateField
-            label={draft.mode === "hotels" ? "Check-out" : "Return"}
+            label={
+              draft.mode === "hotels" || draft.mode === "weekends"
+                ? "Check-out"
+                : draft.mode === "medical"
+                  ? "Last clinic day"
+                  : "Return"
+            }
             value={draft.returnDate ?? addDaysIso(draft.depart, 4)}
             min={draft.depart}
             onChange={(returnDate) => setDraft((d) => ({ ...d, returnDate }))}
@@ -321,10 +360,17 @@ function WhenStep({
         )}
       </div>
 
-      {draft.mode === "hotels" || draft.mode === "packages" || draft.mode === "flights" ? (
+      {draft.mode === "hotels" ||
+      draft.mode === "packages" ||
+      draft.mode === "flights" ||
+      draft.mode === "weekends" ||
+      draft.mode === "hiking" ||
+      draft.mode === "medical" ? (
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <p className="mb-1.5 text-xs font-medium text-muted">Travelers</p>
+            <p className="mb-1.5 text-xs font-medium text-muted">
+              {draft.mode === "medical" ? "Patients" : "Travelers"}
+            </p>
             <Stepper
               value={draft.guests}
               min={1}
@@ -332,7 +378,7 @@ function WhenStep({
               onChange={(guests) => setDraft((d) => ({ ...d, guests }))}
             />
           </div>
-          {draft.mode === "hotels" ? (
+          {draft.mode === "hotels" || draft.mode === "weekends" ? (
             <div>
               <p className="mb-1.5 text-xs font-medium text-muted">Rooms</p>
               <Stepper

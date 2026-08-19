@@ -4,7 +4,10 @@ import { Input } from "@/components/ui/input";
 import {
   featuredDestinations,
   gatewayPlaces,
+  hikeDestinations,
+  medicalDestinations,
   searchPlaces,
+  weekendDestinations,
 } from "@/lib/travel/places";
 import type { Place, TravelMode } from "@/lib/travel/types";
 import { cn } from "@/lib/utils";
@@ -25,7 +28,7 @@ export function PlaceField({
   onSelect: (place: Place) => void;
 }) {
   const [q, setQ] = useState("");
-  const results = useMemo(() => searchPlaces(q, { exclude }), [q, exclude]);
+  const results = useMemo(() => searchPlaces(q, { exclude, mode }), [q, exclude, mode]);
   const searching = q.trim().length > 0;
 
   const grouped = useMemo(() => {
@@ -33,13 +36,20 @@ export function PlaceField({
     const krg = filtered.filter((p) => p.region === "krg");
     const federal = filtered.filter((p) => p.region === "federal");
     const gateways =
-      mode === "hotels" || mode === "car" || mode === "bus"
+      mode === "hotels" ||
+      mode === "car" ||
+      mode === "bus" ||
+      mode === "hiking" ||
+      mode === "weekends"
         ? []
         : filtered.filter((p) => p.region === "gateway");
     return { krg, federal, gateways };
   }, [results, exclude, mode]);
 
   const chips = useMemo(() => {
+    if (mode === "hiking") return hikeDestinations.filter((p) => p.id !== exclude);
+    if (mode === "weekends") return weekendDestinations.filter((p) => p.id !== exclude);
+    if (mode === "medical") return medicalDestinations.filter((p) => p.id !== exclude);
     const extras =
       mode === "hotels" || mode === "car" || mode === "bus"
         ? []
@@ -56,7 +66,7 @@ export function PlaceField({
           autoFocus={autoFocus}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder={value ? value.name : "Type a city or airport"}
+          placeholder={value ? value.name : "Type a place"}
           className="pl-10"
         />
       </div>

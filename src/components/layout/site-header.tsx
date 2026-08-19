@@ -25,15 +25,18 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
+        <nav className="hidden items-center gap-5 text-sm text-muted lg:flex">
           <Link to="/" className="transition-colors hover:text-fg">
             Search
           </Link>
-          <Link to="/" hash="destinations" className="transition-colors hover:text-fg">
-            Destinations
+          <Link to="/" hash="hiking" className="transition-colors hover:text-fg">
+            Hiking
           </Link>
-          <Link to="/" hash="how" className="transition-colors hover:text-fg">
-            How it works
+          <Link to="/" hash="weekends" className="transition-colors hover:text-fg">
+            Weekends
+          </Link>
+          <Link to="/" hash="care" className="transition-colors hover:text-fg">
+            Care
           </Link>
         </nav>
 

@@ -1,13 +1,17 @@
 import { buses, flights, hotels, packages, roadNotes } from "./catalog";
+import { care, hikes, stays } from "./outings";
 import { cheapest, haversineKm } from "./format";
 import { getPlace, localPlaces } from "./places";
 import type {
   BusOffer,
+  CareOffer,
   CarOffer,
   FlightOffer,
+  HikeOffer,
   HotelOffer,
   PackageOffer,
   SearchQuery,
+  StayOffer,
   TravelOffer,
 } from "./types";
 
@@ -22,7 +26,6 @@ export function searchFlights(q: SearchQuery): FlightOffer[] {
   const rows = flights.filter((f) => f.from === origin && f.to === dest);
   if (rows.length) return [...rows].sort((a, b) => cheapest(a.sources) - cheapest(b.sources));
 
-  // One-stop synthesis via Istanbul or Dubai when no nonstop exists
   const viaHubs = ["istanbul", "dubai", "doha"] as const;
   const synthesized: FlightOffer[] = [];
   for (const hub of viaHubs) {
@@ -61,7 +64,6 @@ export function searchHotels(q: SearchQuery): HotelOffer[] {
   const nights = nightsBetween(q.depart, q.returnDate);
   return hotels
     .filter((h) => h.city === q.to)
-    .map((h) => ({ ...h, nightlyUsd: h.nightlyUsd }))
     .sort((a, b) => a.nightlyUsd - b.nightlyUsd)
     .map((h) => ({
       ...h,
@@ -116,6 +118,34 @@ export function searchPackages(q: SearchQuery): PackageOffer[] {
     .sort((a, b) => a.priceUsd - b.priceUsd);
 }
 
+export function searchHikes(q: SearchQuery): HikeOffer[] {
+  return hikes
+    .filter((h) => h.city === q.to || h.bases.includes(q.to) || (q.from && h.bases.includes(q.from)))
+    .sort((a, b) => a.priceUsd - b.priceUsd);
+}
+
+export function searchStays(q: SearchQuery): StayOffer[] {
+  const exact = stays.filter((s) => s.city === q.to);
+  const nearby =
+    exact.length === 0
+      ? stays.filter((s) => {
+          const dest = getPlace(q.to);
+          const city = getPlace(s.city);
+          if (!dest || !city) return false;
+          return haversineKm(dest, city) < 80;
+        })
+      : [];
+  return [...exact, ...nearby]
+    .filter((s) => s.guests >= q.guests)
+    .sort((a, b) => a.nightlyUsd - b.nightlyUsd);
+}
+
+export function searchCare(q: SearchQuery): CareOffer[] {
+  return care
+    .filter((c) => c.city === q.to || (q.from && c.city === q.from))
+    .sort((a, b) => a.priceUsd - b.priceUsd);
+}
+
 export function searchTravel(q: SearchQuery): TravelOffer[] {
   switch (q.mode) {
     case "flights":
@@ -128,6 +158,12 @@ export function searchTravel(q: SearchQuery): TravelOffer[] {
       return searchCars(q);
     case "packages":
       return searchPackages(q);
+    case "hiking":
+      return searchHikes(q);
+    case "weekends":
+      return searchStays(q);
+    case "medical":
+      return searchCare(q);
     default:
       return [];
   }
@@ -150,6 +186,18 @@ export function alsoConsider(q: SearchQuery) {
   if (q.mode !== "hotels") {
     const n = searchHotels({ ...q, mode: "hotels" }).length;
     if (n) out.push({ mode: "hotels", label: "Stay", detail: `${n} hotel${n === 1 ? "" : "s"}` });
+  }
+  if (q.mode !== "hiking") {
+    const n = searchHikes({ ...q, mode: "hiking" }).length;
+    if (n) out.push({ mode: "hiking", label: "Hike", detail: `${n} trail${n === 1 ? "" : "s"}` });
+  }
+  if (q.mode !== "weekends") {
+    const n = searchStays({ ...q, mode: "weekends" }).length;
+    if (n) out.push({ mode: "weekends", label: "Villa weekend", detail: `${n} stay${n === 1 ? "" : "s"}` });
+  }
+  if (q.mode !== "medical") {
+    const n = searchCare({ ...q, mode: "medical" }).length;
+    if (n) out.push({ mode: "medical", label: "Care", detail: `${n} clinic${n === 1 ? "" : "s"}` });
   }
   return out;
 }

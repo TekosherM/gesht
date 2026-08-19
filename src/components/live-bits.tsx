@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
+import type { TravelMode } from "@/lib/travel/types";
 import { cn } from "@/lib/utils";
 
 const TICKS = [
   "EBL citadel · open till dusk",
   "IQD · 1 USD ≈ 1,320",
   "Erbil → Baghdad · 5h 20m by road",
-  "Slemani tonight · clear, 18°",
-  "Fly Baghdad 223 · on-time 91%",
-  "Cihan VIP · EBL–ISU 3h 10m",
+  "Shaqlawa Friday traffic · leave Thursday",
+  "Gali Ali Beg · weekday mornings quieter",
+  "PAR Hospital Erbil · consults this week",
 ];
 
 export function LiveTicker({ className }: { className?: string }) {
@@ -57,33 +58,40 @@ export function LocalClock() {
   );
 }
 
-const SOURCES = [
-  "Iraqi Airways",
-  "Fly Baghdad",
-  "Wego",
-  "Skyscanner",
-  "Cihan Travel",
-  "Station window",
-];
+const SOURCE_SETS: Record<string, string[]> = {
+  hiking: ["Local guide", "Cihan day tour", "Driver-guide", "Trail desk"],
+  weekends: ["Villa broker", "Booking", "Airbnb", "Host"],
+  medical: ["Hospital desk", "Facilitator", "Airline", "Hotel"],
+  default: [
+    "Iraqi Airways",
+    "Fly Baghdad",
+    "Wego",
+    "Skyscanner",
+    "Cihan Travel",
+    "Station window",
+  ],
+};
 
-export function SourceSweep({ running }: { running: boolean }) {
+export function SourceSweep({ running, mode }: { running: boolean; mode?: TravelMode }) {
+  const sources =
+    (mode && SOURCE_SETS[mode]) || SOURCE_SETS.default;
   const [done, setDone] = useState(0);
 
   useEffect(() => {
     if (!running) {
-      setDone(SOURCES.length);
+      setDone(sources.length);
       return;
     }
     setDone(0);
-    const timers = SOURCES.map((_, i) =>
+    const timers = sources.map((_, i) =>
       window.setTimeout(() => setDone(i + 1), 280 + i * 220),
     );
     return () => timers.forEach((id) => window.clearTimeout(id));
-  }, [running]);
+  }, [running, sources]);
 
   return (
     <div className="flex flex-wrap gap-2">
-      {SOURCES.map((name, i) => {
+      {sources.map((name, i) => {
         const scanning = running && done === i;
         const ok = done > i;
         return (

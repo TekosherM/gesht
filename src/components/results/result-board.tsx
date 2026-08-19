@@ -89,7 +89,7 @@ export function ResultBoard({
           <p className="mb-2 text-[11px] font-medium tracking-wide text-faint uppercase">
             Source sweep
           </p>
-          <SourceSweep running={loading} />
+          <SourceSweep running={loading} mode={query.mode} />
         </div>
 
         {alts.length ? (
@@ -125,8 +125,8 @@ export function ResultBoard({
             <SlidersHorizontal className="mx-auto size-6 text-muted" />
             <p className="mt-3 font-display text-xl">No listings on this corridor</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-              Try a gateway such as Istanbul or Dubai for flights, or switch to car for any two
-              cities inside Iraq and the KRG.
+              Try Shaqlawa or Gali Ali Beg for hiking, a lake villa for the weekend, or Erbil
+              for care — or switch to car for any two cities inside Iraq and the KRG.
             </p>
           </div>
         ) : null}
@@ -148,6 +148,9 @@ function score(offer: TravelOffer, sort: "price" | "duration") {
   }
   if (offer.kind === "hotel") return offer.nightlyUsd;
   if (offer.kind === "car") return sort === "duration" ? offer.hours * 60 : offer.fuelUsd;
+  if (offer.kind === "hike") return sort === "duration" ? offer.hours * 60 : offer.priceUsd;
+  if (offer.kind === "stay") return offer.nightlyUsd;
+  if (offer.kind === "care") return sort === "duration" ? offer.nights * 24 * 60 : offer.priceUsd;
   return offer.priceUsd;
 }
 

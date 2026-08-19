@@ -1,6 +1,16 @@
-export type TravelMode = "flights" | "hotels" | "packages" | "bus" | "car";
+export type TravelMode =
+  | "flights"
+  | "hotels"
+  | "packages"
+  | "bus"
+  | "car"
+  | "hiking"
+  | "weekends"
+  | "medical";
 
 export type Region = "krg" | "federal" | "gateway";
+
+export type PlaceFocus = "hike" | "weekend" | "medical";
 
 export type Place = {
   id: string;
@@ -14,6 +24,7 @@ export type Place = {
   blurb: string;
   image?: string;
   featured?: boolean;
+  focus?: PlaceFocus[];
 };
 
 export type MoneySource = {
@@ -89,12 +100,58 @@ export type PackageOffer = {
   season: string;
 };
 
+export type HikeOffer = {
+  kind: "hike";
+  id: string;
+  trail: string;
+  city: string;
+  bases: string[];
+  grade: "easy" | "moderate" | "hard";
+  km: number;
+  hours: number;
+  season: string;
+  priceUsd: number;
+  includes: string[];
+  note: string;
+};
+
+export type StayOffer = {
+  kind: "stay";
+  id: string;
+  city: string;
+  name: string;
+  type: "villa" | "apartment" | "chalet";
+  area: string;
+  guests: number;
+  nightlyUsd: number;
+  driveFrom: string;
+  amenities: string[];
+  note: string;
+};
+
+export type CareOffer = {
+  kind: "care";
+  id: string;
+  city: string;
+  hospital: string;
+  specialty: string;
+  wait: string;
+  nights: number;
+  priceUsd: number;
+  includes: string[];
+  languages: string[];
+  note: string;
+};
+
 export type TravelOffer =
   | FlightOffer
   | HotelOffer
   | BusOffer
   | CarOffer
-  | PackageOffer;
+  | PackageOffer
+  | HikeOffer
+  | StayOffer
+  | CareOffer;
 
 export type SearchQuery = {
   mode: TravelMode;

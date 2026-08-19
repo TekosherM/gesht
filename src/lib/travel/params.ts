@@ -1,7 +1,16 @@
 import { defaultDepartIso, defaultReturnIso } from "./format";
 import type { SearchQuery, TravelMode } from "./types";
 
-const modes: TravelMode[] = ["flights", "hotels", "packages", "bus", "car"];
+const modes: TravelMode[] = [
+  "flights",
+  "hotels",
+  "packages",
+  "bus",
+  "car",
+  "hiking",
+  "weekends",
+  "medical",
+];
 
 export function isTravelMode(v: unknown): v is TravelMode {
   return typeof v === "string" && (modes as string[]).includes(v);
@@ -70,4 +79,7 @@ export const modeMeta: Record<
   packages: { label: "Packages", short: "Trip", needsFrom: false },
   bus: { label: "Bus", short: "Bus", needsFrom: true },
   car: { label: "Car", short: "Drive", needsFrom: true },
+  hiking: { label: "Hiking", short: "Hike", needsFrom: false },
+  weekends: { label: "Weekends", short: "Villa", needsFrom: false },
+  medical: { label: "Care", short: "Care", needsFrom: false },
 };

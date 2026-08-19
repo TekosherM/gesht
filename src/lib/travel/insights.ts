@@ -92,6 +92,42 @@ const cityCopy: Record<string, { about: string; tips: string[]; watch: string[] 
     tips: ["Go with a Slemani driver who has done the road."],
     watch: ["Treat the memorial as a memorial, not a viewpoint."],
   },
+  shaqlawa: {
+    about:
+      "Shaqlawa is Erbil’s hill town — 50 minutes, orchards, and the default Friday villa. Walks are gentle; the point is leaving the city, not bagging a peak.",
+    tips: ["Leave Thursday evening if you can. Friday noon traffic is the tax."],
+    watch: ["Generator noise on cheap villas. Ask before you book."],
+  },
+  korek: {
+    about: "Korek is the ridge above Rawanduz. A cable car, chalets, and the first real alpine feeling in the KRG.",
+    tips: ["Book the chalet and the cable-car window together."],
+    watch: ["Ice into April. Afternoon wind on the ridge."],
+  },
+  "gali-ali-beg": {
+    about: "Gali Ali Beg is the waterfall gorge on Hamilton Road — the photograph everyone already has, and still worth the day.",
+    tips: ["Combine with Rawanduz viewpoints. One long Erbil day."],
+    watch: ["Friday picnic crowds. Weekday mornings are kinder."],
+  },
+  dukan: {
+    about: "Dukan is the lake between Erbil and Slemani. Villas, swimming, and a weekend that is about the water, not a town.",
+    tips: ["Summer Fridays sell out. Confirm water pressure."],
+    watch: ["The Erbil road clogs from mid-afternoon Thursday."],
+  },
+  "ahmad-awa": {
+    about: "Ahmad Awa is Slemani’s waterfall picnic valley. Spring is the season; summer is a car park.",
+    tips: ["Go early from Salim Street. Pair with Halabja only if you start at dawn."],
+    watch: ["Flash crowds on public holidays."],
+  },
+  choman: {
+    about: "Choman is the town under Halgurd. Come for the mountain, not the nightlife.",
+    tips: ["Hire a guide who has done the approach this season."],
+    watch: ["Do not treat Halgurd as a Hamilton Road extra."],
+  },
+  akre: {
+    about: "Akre climbs a hillside in stepped lanes. Nowruz it is a festival; the rest of the year it is a quiet overnight from Duhok.",
+    tips: ["Sleep in town if you want the dawn ridge."],
+    watch: ["Nowruz week is not a villa weekend. Book months ahead or skip."],
+  },
 };
 
 const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[] }> = {
@@ -136,6 +172,30 @@ const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[]
       "Museum and site days fail when the package pretends opening hours are fixed.",
     ],
   },
+  hiking: {
+    title: "On the trail",
+    body: "KRG hiking is road-accessible mountain walking more often than wilderness. Gali Ali Beg and Shaqlawa are Friday days; Halgurd is a real peak that needs a June–September window and a guide who has done the approach.",
+    tips: [
+      "Start from Erbil or Slemani at dawn. Summer rock radiates by noon.",
+      "Download offline maps. Gorges drop mobile data.",
+    ],
+  },
+  weekends: {
+    title: "The Friday house",
+    body: "Erbil empties toward Shaqlawa, Dukan, and Korek on Thursday night. Villas book by WhatsApp as often as by app. Federal weekends are city apartments — Jadriya, Karada — not lake houses.",
+    tips: [
+      "Ask about the generator and the water tank before you send a deposit.",
+      "Thursday–Saturday is the real weekend. Sunday traffic back to Erbil is ugly.",
+    ],
+  },
+  medical: {
+    title: "Traveling for care",
+    body: "Erbil and Slemani are the inbound medical cities in the KRG; Baghdad is a referral city if you already have the federal visa. Istanbul and Amman remain the outbound campuses when the case needs a larger hospital.",
+    tips: [
+      "Carry records on a USB and on paper. Coordinators still print.",
+      "A written quote before imaging is the difference between a plan and a surprise.",
+    ],
+  },
 };
 
 export function curatedBrief(
@@ -165,6 +225,18 @@ export function curatedBrief(
     } else if (mode === "bus") {
       journeyBits.unshift(
         `Garage departures from ${origin.name} toward ${dest.name} are frequent on the main corridors, scarce on mountain spurs.`,
+      );
+    } else if (mode === "hiking") {
+      journeyBits.unshift(
+        `${dest.name} is a trail day from ${origin.name}. Most KRG walks start with a paved road and a short footpath — Halgurd is the exception.`,
+      );
+    } else if (mode === "weekends") {
+      journeyBits.unshift(
+        `A weekend in ${dest.name}, leaving ${origin.name}. Thursday arrival beats Friday traffic.`,
+      );
+    } else if (mode === "medical") {
+      journeyBits.unshift(
+        `Care in ${dest.name}, arriving from ${origin.name}. Bring records, a written quote, and someone who can sit the waiting room with you.`,
       );
     }
   }

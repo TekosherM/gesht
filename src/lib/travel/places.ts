@@ -13,6 +13,7 @@ export const places: Place[] = [
     blurb: "The citadel city and the easiest air gateway into the Kurdistan Region.",
     image: "/destinations/erbil.jpg",
     featured: true,
+    focus: ["weekend", "medical"],
   },
   {
     id: "sulaymaniyah",
@@ -26,6 +27,7 @@ export const places: Place[] = [
     blurb: "Cultural capital of the KRG — mountains, cafes, and a second international airport.",
     image: "/destinations/sulaymaniyah.jpg",
     featured: true,
+    focus: ["hike", "weekend", "medical"],
   },
   {
     id: "duhok",
@@ -38,6 +40,7 @@ export const places: Place[] = [
     blurb: "Northern mountain city, close to Zakho and the Turkish border road.",
     image: "/destinations/duhok.jpg",
     featured: true,
+    focus: ["hike", "weekend"],
   },
   {
     id: "baghdad",
@@ -51,6 +54,7 @@ export const places: Place[] = [
     blurb: "The Tigris capital — museums, river cafes, and the main federal gateway.",
     image: "/destinations/baghdad.jpg",
     featured: true,
+    focus: ["weekend", "medical"],
   },
   {
     id: "najaf",
@@ -128,6 +132,8 @@ export const places: Place[] = [
     lat: 37.092,
     lng: 43.487,
     blurb: "A mesa town in the high north — weekend drives from Duhok.",
+    image: "/destinations/duhok.jpg",
+    focus: ["hike", "weekend"],
   },
   {
     id: "rawanduz",
@@ -138,6 +144,7 @@ export const places: Place[] = [
     lat: 36.612,
     lng: 44.524,
     blurb: "Gorges, Hamilton Road, and the mountain weekend circuit from Erbil.",
+    focus: ["hike", "weekend"],
   },
   {
     id: "halabja",
@@ -148,6 +155,91 @@ export const places: Place[] = [
     lat: 35.178,
     lng: 45.986,
     blurb: "Memorial city east of Sulaymaniyah, usually a day trip by car.",
+    focus: ["hike"],
+  },
+  {
+    id: "shaqlawa",
+    name: "Shaqlawa",
+    localName: "Şeqlawe",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 36.405,
+    lng: 44.321,
+    blurb: "Hill town 50 minutes from Erbil — orchards, weekend villas, easy walks.",
+    image: "/destinations/shaqlawa.jpg",
+    focus: ["hike", "weekend"],
+  },
+  {
+    id: "korek",
+    name: "Korek",
+    localName: "Korek",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 36.586,
+    lng: 44.46,
+    blurb: "Ridge above Rawanduz with a cable car, chalets, and high trails.",
+    image: "/destinations/korek.jpg",
+    focus: ["hike", "weekend"],
+  },
+  {
+    id: "gali-ali-beg",
+    name: "Gali Ali Beg",
+    localName: "Gelî Elî Beg",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 36.628,
+    lng: 44.45,
+    blurb: "The waterfall gorge on Hamilton Road — the KRG’s classic day hike.",
+    image: "/destinations/gali-ali-beg.jpg",
+    focus: ["hike"],
+  },
+  {
+    id: "dukan",
+    name: "Dukan",
+    localName: "Dukan",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 35.954,
+    lng: 44.958,
+    blurb: "Lake town between Erbil and Slemani — villas, swimming, Friday traffic.",
+    image: "/destinations/dukan.jpg",
+    focus: ["weekend"],
+  },
+  {
+    id: "ahmad-awa",
+    name: "Ahmad Awa",
+    localName: "Ehmadawa",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 35.3,
+    lng: 46.09,
+    blurb: "Waterfall picnic valley east of Slemani, busy on Fridays in spring.",
+    image: "/destinations/sulaymaniyah.jpg",
+    focus: ["hike", "weekend"],
+  },
+  {
+    id: "choman",
+    name: "Choman",
+    localName: "Çoman",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 36.637,
+    lng: 44.885,
+    blurb: "Gateway to Halgurd — the serious high-mountain trail in the KRG.",
+    image: "/destinations/korek.jpg",
+    focus: ["hike"],
+  },
+  {
+    id: "akre",
+    name: "Akre",
+    localName: "Akré",
+    country: "Kurdistan Region",
+    region: "krg",
+    lat: 36.741,
+    lng: 43.893,
+    blurb: "Stepped hillside town famous at Nowruz, a quiet overnight otherwise.",
+    image: "/destinations/duhok.jpg",
+    focus: ["hike", "weekend"],
   },
   {
     id: "istanbul",
@@ -159,6 +251,7 @@ export const places: Place[] = [
     lat: 41.0082,
     lng: 28.9784,
     blurb: "The busiest connecting city into Erbil, Baghdad, and Sulaymaniyah.",
+    focus: ["medical"],
   },
   {
     id: "dubai",
@@ -170,6 +263,7 @@ export const places: Place[] = [
     lat: 25.2048,
     lng: 55.2708,
     blurb: "Gulf hub for flydubai and Emirates into EBL, BGW, NJF, and BSR.",
+    focus: ["medical"],
   },
   {
     id: "doha",
@@ -192,6 +286,7 @@ export const places: Place[] = [
     lat: 31.9539,
     lng: 35.9106,
     blurb: "Royal Jordanian and a common overland-adjacent Gulf hop.",
+    focus: ["medical"],
   },
   {
     id: "london",
@@ -261,7 +356,8 @@ export function getPlace(id: string): Place | undefined {
 
 export function searchPlaces(q: string, opts?: { exclude?: string; mode?: string }) {
   const query = q.trim().toLowerCase();
-  return places.filter((p) => {
+  const pool = placesForMode(opts?.mode);
+  return pool.filter((p) => {
     if (opts?.exclude && p.id === opts.exclude) return false;
     if (!query) return true;
     return (
@@ -273,6 +369,16 @@ export function searchPlaces(q: string, opts?: { exclude?: string; mode?: string
   });
 }
 
+export function placesForMode(mode?: string) {
+  if (mode === "hiking") return places.filter((p) => p.focus?.includes("hike"));
+  if (mode === "weekends") return places.filter((p) => p.focus?.includes("weekend"));
+  if (mode === "medical") return places.filter((p) => p.focus?.includes("medical"));
+  return places;
+}
+
 export const featuredDestinations = places.filter((p) => p.featured);
 export const localPlaces = places.filter((p) => p.region !== "gateway");
 export const gatewayPlaces = places.filter((p) => p.region === "gateway");
+export const hikeDestinations = places.filter((p) => p.focus?.includes("hike"));
+export const weekendDestinations = places.filter((p) => p.focus?.includes("weekend"));
+export const medicalDestinations = places.filter((p) => p.focus?.includes("medical"));

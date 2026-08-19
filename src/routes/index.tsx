@@ -1,13 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Bus, CarFront, Hotel, Plane } from "lucide-react";
+import { ArrowUpRight, Footprints, HeartPulse, House, Plane } from "lucide-react";
+import type { ReactNode } from "react";
 import { Atmosphere } from "@/components/atmosphere";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { LiveTicker } from "@/components/live-bits";
 import { SearchConsole } from "@/components/search/search-console";
 import { StarGlyph } from "@/components/star";
-import { featuredDestinations } from "@/lib/travel/places";
 import { defaultDepartIso, defaultReturnIso } from "@/lib/travel/format";
+import {
+  featuredDestinations,
+  hikeDestinations,
+  medicalDestinations,
+  weekendDestinations,
+} from "@/lib/travel/places";
+import type { Place, TravelMode } from "@/lib/travel/types";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -40,7 +47,7 @@ function Home() {
                 <p className="rise-in stagger-5 mt-5 max-w-md text-base text-muted sm:text-lg">
                   <span className="font-display text-fg">گەشت</span>
                   <span className="mx-2 text-gold">·</span>
-                  travel, in Kurdish. Flights, hotels, coaches, the road — then a local brief
+                  travel, in Kurdish. Flights, villas, trails, care — then a local brief
                   for the city and the way you get there.
                 </p>
                 <LiveTicker className="rise-in stagger-6 mt-7 max-w-md" />
@@ -51,74 +58,68 @@ function Home() {
             </div>
           </section>
 
-          <section id="destinations" className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="flex items-center gap-2 text-xs font-medium tracking-wide text-faint uppercase">
-                  <StarGlyph className="size-2.5 text-gold" />
-                  Destinations
-                </p>
-                <h2 className="mt-1 font-display text-3xl tracking-tight">
-                  Where <em className="italic text-primary">Gesht</em> is strongest
-                </h2>
-              </div>
-            </div>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredDestinations.map((place, i) => (
-                <Link
-                  key={place.id}
-                  to="/search"
-                  search={{
-                    mode: "hotels" as const,
-                    to: place.id,
-                    depart: defaultDepartIso(),
-                    returnDate: defaultReturnIso(),
-                    guests: 1,
-                    rooms: 1,
-                  }}
-                  className={`group relative isolate overflow-hidden rounded-xl bg-sunken shadow-border hover-lift rise-in stagger-${i + 1}`}
-                >
-                  {place.image ? (
-                    <img
-                      src={place.image}
-                      alt=""
-                      className="aspect-16/10 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-                    />
-                  ) : (
-                    <div className="aspect-16/10 w-full bg-sunken" />
-                  )}
-                  <div className="absolute inset-0 bg-linear-to-t from-fg/75 via-fg/15 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-4 text-primary-fg">
-                    <p className="font-display text-2xl tracking-tight">{place.name}</p>
-                    <p className="text-sm text-primary-fg/80">{place.localName}</p>
-                    <p className="mt-1 line-clamp-2 text-xs text-primary-fg/75">{place.blurb}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
+          <PlaceSection
+            id="destinations"
+            kicker="Destinations"
+            title={
+              <>
+                Where <em className="italic text-primary">Gesht</em> is strongest
+              </>
+            }
+            places={featuredDestinations}
+            mode="hotels"
+          />
+
+          <PlaceSection
+            id="hiking"
+            kicker="Hiking trips"
+            title="Zagros trails and gorge days"
+            lede="Gali Ali Beg on a weekday morning. Korek on the ridge. Halgurd if you actually mean a mountain."
+            places={hikeDestinations.filter((p) => p.image)}
+            mode="hiking"
+            fallbackImage="/destinations/gali-ali-beg.jpg"
+          />
+
+          <PlaceSection
+            id="weekends"
+            kicker="Weekends nearby"
+            title="Villas, apartments, Friday houses"
+            lede="Erbil empties toward Shaqlawa and Dukan. Slemani walks Salim Street. Baghdad takes a Jadriya flat."
+            places={weekendDestinations.filter((p) => p.image)}
+            mode="weekends"
+          />
+
+          <PlaceSection
+            id="care"
+            kicker="Medical travel"
+            title="Clinics, coordinators, the waiting room"
+            lede="Erbil and Slemani inbound. Baghdad by referral. Istanbul and Amman when the campus needs to be larger."
+            places={medicalDestinations.filter((p) => p.image)}
+            mode="medical"
+            fallbackImage="/destinations/erbil.jpg"
+          />
 
           <section id="how" className="border-t border-line/80">
             <div className="mx-auto grid max-w-6xl gap-4 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
               <How
                 icon={Plane}
                 title="Ask where to"
-                body="Start with the city. We ask origin next — Istanbul, Dubai, or the next town over."
+                body="Start with the city, the trail, or the clinic. Origin comes next if the mode needs it."
               />
               <How
-                icon={Hotel}
-                title="Compare sources"
-                body="Airline, Wego, Skyscanner, the garage window. Prices sit next to each other."
+                icon={Footprints}
+                title="Walk the Zagros"
+                body="Guided days on Hamilton Road, Korek, Ahmad Awa, and the high approach from Choman."
               />
               <How
-                icon={CarFront}
-                title="Measure the road"
-                body="Car search is distance-first: kilometres, hours, fuel, and the checkpoint count."
+                icon={House}
+                title="Take the house"
+                body="Villas and apartments for the Thursday–Saturday empty-out — lake, ridge, or city."
               />
               <How
-                icon={Bus}
-                title="Read the brief"
-                body="A guide opens on the result — visa notes, the journey, what to watch."
+                icon={HeartPulse}
+                title="Travel for care"
+                body="Hospital desks in Erbil, Slemani, Baghdad, plus outbound letters for Istanbul and Amman."
               />
             </div>
           </section>
@@ -126,6 +127,75 @@ function Home() {
         <SiteFooter />
       </div>
     </div>
+  );
+}
+
+function PlaceSection({
+  id,
+  kicker,
+  title,
+  lede,
+  places,
+  mode,
+  fallbackImage,
+}: {
+  id: string;
+  kicker: string;
+  title: ReactNode;
+  lede?: string;
+  places: Place[];
+  mode: TravelMode;
+  fallbackImage?: string;
+}) {
+  return (
+    <section id={id} className="border-t border-line/60">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="flex items-center gap-2 text-xs font-medium tracking-wide text-faint uppercase">
+              <StarGlyph className="size-2.5 text-gold" />
+              {kicker}
+            </p>
+            <h2 className="mt-1 font-display text-3xl tracking-tight">{title}</h2>
+            {lede ? <p className="mt-2 max-w-xl text-sm text-muted">{lede}</p> : null}
+          </div>
+        </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {places.slice(0, 6).map((place, i) => (
+            <Link
+              key={place.id}
+              to="/search"
+              search={{
+                mode,
+                to: place.id,
+                from: mode === "medical" && place.region === "gateway" ? undefined : undefined,
+                depart: defaultDepartIso(),
+                returnDate: defaultReturnIso(),
+                guests: 1,
+                rooms: 1,
+              }}
+              className={`group relative isolate overflow-hidden rounded-xl bg-sunken shadow-border hover-lift rise-in stagger-${i + 1}`}
+            >
+              {place.image || fallbackImage ? (
+                <img
+                  src={place.image ?? fallbackImage}
+                  alt=""
+                  className="aspect-16/10 w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                />
+              ) : (
+                <div className="aspect-16/10 w-full bg-sunken" />
+              )}
+              <div className="absolute inset-0 bg-linear-to-t from-fg/75 via-fg/15 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4 text-primary-fg">
+                <p className="font-display text-2xl tracking-tight">{place.name}</p>
+                <p className="text-sm text-primary-fg/80">{place.localName}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-primary-fg/75">{place.blurb}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

@@ -2,12 +2,16 @@ import {
   Bus,
   CarFront,
   Clock3,
+  Footprints,
   Fuel,
+  HeartPulse,
+  Home,
   Hotel,
   Mountain,
   Plane,
   Route,
   Star,
+  Trees,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -16,11 +20,14 @@ import { nightsBetween } from "@/lib/travel/search";
 import { getPlace } from "@/lib/travel/places";
 import type {
   BusOffer,
+  CareOffer,
   CarOffer,
   FlightOffer,
+  HikeOffer,
   HotelOffer,
   PackageOffer,
   SearchQuery,
+  StayOffer,
   TravelOffer,
 } from "@/lib/travel/types";
 
@@ -36,6 +43,12 @@ export function ResultCard({ offer, query }: { offer: TravelOffer; query: Search
       return <CarCard offer={offer} />;
     case "package":
       return <PackageCard offer={offer} />;
+    case "hike":
+      return <HikeCard offer={offer} />;
+    case "stay":
+      return <StayCard offer={offer} query={query} />;
+    case "care":
+      return <CareCard offer={offer} />;
   }
 }
 
@@ -185,6 +198,107 @@ function PackageCard({ offer }: { offer: PackageOffer }) {
           <p className="text-xs text-muted">from</p>
           <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
           <p className="text-xs text-muted">per person</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function HikeCard({ offer }: { offer: HikeOffer }) {
+  return (
+    <Card className="p-4 hover-lift sm:p-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
+            <Footprints className="size-3.5" />
+            <span>{getPlace(offer.city)?.name}</span>
+            <Badge className="capitalize">{offer.grade}</Badge>
+            <span className="text-faint">{offer.season}</span>
+          </div>
+          <h3 className="mt-1 font-display text-xl tracking-tight">{offer.trail}</h3>
+          <p className="mt-1 text-sm text-muted">{offer.note}</p>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <Stat icon={Route} label="Distance" value={`${offer.km} km`} />
+            <Stat icon={Clock3} label="On trail" value={hoursLabel(offer.hours)} />
+            <Stat icon={Trees} label="From" value={offer.bases.map((id) => getPlace(id)?.name ?? id).join(" · ")} />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {offer.includes.map((item) => (
+              <Badge key={item}>{item}</Badge>
+            ))}
+          </div>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="text-xs text-muted">guided day from</p>
+          <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
+          <p className="text-xs text-muted">per person</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function StayCard({ offer, query }: { offer: StayOffer; query: SearchQuery }) {
+  const nights = nightsBetween(query.depart, query.returnDate);
+  return (
+    <Card className="p-4 hover-lift sm:p-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
+            <Home className="size-3.5" />
+            <span className="capitalize">{offer.type}</span>
+            <span className="text-faint">· {offer.area}</span>
+          </div>
+          <h3 className="mt-1 font-display text-xl tracking-tight">{offer.name}</h3>
+          <p className="mt-1 text-sm text-muted">{offer.note}</p>
+          <p className="mt-2 text-xs text-faint">
+            Sleeps {offer.guests} · {offer.driveFrom}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {offer.amenities.map((a) => (
+              <Badge key={a}>{a}</Badge>
+            ))}
+          </div>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="text-xs text-muted">per night</p>
+          <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.nightlyUsd)}</p>
+          <p className="text-xs text-muted">
+            {nights} night{nights === 1 ? "" : "s"} · {usd(offer.nightlyUsd * nights)}
+          </p>
+          <p className="mt-2 text-xs text-faint">Broker · Booking · Host</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function CareCard({ offer }: { offer: CareOffer }) {
+  return (
+    <Card className="p-4 hover-lift sm:p-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
+            <HeartPulse className="size-3.5" />
+            <span>{offer.specialty}</span>
+            <span className="text-faint">· {getPlace(offer.city)?.name}</span>
+          </div>
+          <h3 className="mt-1 font-display text-xl tracking-tight">{offer.hospital}</h3>
+          <p className="mt-1 text-sm text-muted">{offer.note}</p>
+          <p className="mt-2 text-xs text-faint">
+            {offer.wait} · {offer.nights} nights on the ground
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {offer.includes.map((item) => (
+              <Badge key={item}>{item}</Badge>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-muted">Languages: {offer.languages.join(" · ")}</p>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="text-xs text-muted">indicative package</p>
+          <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
+          <p className="text-xs text-muted">confirm at the desk</p>
         </div>
       </div>
     </Card>
