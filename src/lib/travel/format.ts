@@ -54,6 +54,13 @@ export function cheapest(sources: { usd: number }[]) {
   return Math.min(...sources.map((s) => s.usd));
 }
 
+export const IQD_PER_USD = 1310;
+
+export function iqd(usdAmount: number) {
+  const n = Math.round(usdAmount * IQD_PER_USD);
+  return `${new Intl.NumberFormat("en-US").format(n)} IQD`;
+}
+
 export function haversineKm(
   a: { lat: number; lng: number },
   b: { lat: number; lng: number },

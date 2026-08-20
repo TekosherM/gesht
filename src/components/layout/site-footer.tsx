@@ -7,11 +7,17 @@ export function SiteFooter() {
         <p>
           <span className="font-display text-fg">Gesht</span>
           <span className="mx-2 text-faint">گەشت</span>
-          compares Iraq and Kurdistan travel — flights, rooms, coaches, and the road.
+          compares Iraq and Kurdistan travel — flights, rooms, coaches, trails, Friday houses, and care corridors. Prices are indicative; live seats live on the desk.
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Link to="/" className="hover:text-fg">
             Search
+          </Link>
+          <Link to="/" hash="hiking" className="hover:text-fg">
+            Hiking
+          </Link>
+          <Link to="/" hash="care" className="hover:text-fg">
+            Care
           </Link>
           <Link to="/login" className="hover:text-fg">
             Account

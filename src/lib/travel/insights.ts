@@ -1,4 +1,5 @@
 import type { GuideBrief, TravelMode } from "./types";
+import { airportFor, visaFor } from "./meta";
 import { getPlace } from "./places";
 
 const cityCopy: Record<string, { about: string; tips: string[]; watch: string[] }> = {
@@ -193,6 +194,46 @@ const cityCopy: Record<string, { about: string; tips: string[]; watch: string[] 
     tips: ["Same visa order as Delhi. Longer flight."],
     watch: ["Family travel. This is not a four-day hop."],
   },
+  qaradagh: {
+    about: "Forested belt south of Slemani. Named day walks. Iran–Iraq War UXO off-trail.",
+    tips: ["Stay on used paths. A Slemani guide, not a solo ridge."],
+    watch: ["Not a marked national-park network."],
+  },
+  dubai: {
+    about: "Dubai is the fast-imaging hop, not the cheapest hospital city. Used for second reads, then home.",
+    tips: ["48–72 hour diagnostics. Do not confuse this with an India surgery trip."],
+    watch: ["Labs cost Gulf prices."],
+  },
+  doha: {
+    about: "Doha is a Qatar Airways machine. You change planes; you rarely sleep in the city on a Gesht trip.",
+    tips: ["Long layover? Stay airside unless the visa is already done."],
+    watch: ["Not a medical corridor in this app."],
+  },
+  london: {
+    about: "London is a one-stop European origin into Erbil, usually via Istanbul or the Gulf.",
+    tips: ["Compare TK via IST against a Gulf one-stop. Direct is rare."],
+    watch: ["UK visa is a separate problem from the KRG e-visa."],
+  },
+  frankfurt: {
+    about: "Frankfurt is the Lufthansa / FlyErbil seasonal gate toward Erbil.",
+    tips: ["Check if the EBL seasonal is running before you book FRA as the story."],
+    watch: ["Schengen visa."],
+  },
+  cairo: {
+    about: "Cairo connects EgyptAir into Baghdad and Erbil. A hub, not a KRG weekend.",
+    tips: ["Use it when the IST fare is worse, not as a destination on this map."],
+    watch: ["Egypt visa."],
+  },
+  kuwait: {
+    about: "Kuwait is the short Gulf hop to Basra and Najaf.",
+    tips: ["Useful for the south. Not a KRG entry."],
+    watch: ["Kuwait visa. Federal Iraq rules on arrival."],
+  },
+  beirut: {
+    about: "Beirut is the Levant connection, often via Amman or Istanbul when it is flying.",
+    tips: ["Schedules change. Confirm the week you travel."],
+    watch: ["Not a medical corridor we sell."],
+  },
 };
 
 const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[] }> = {
@@ -273,10 +314,12 @@ export function curatedBrief(
   const origin = fromId ? getPlace(fromId) : undefined;
   const city = cityCopy[toId];
   const travel = modeCopy[mode];
+  const air = dest ? airportFor(dest.id) : undefined;
+  const airPlace = air ? getPlace(air) : undefined;
 
   const destination =
     city?.about ??
-    `${dest?.name ?? "This city"} is on the Gesht map. Treat the guide as a starting brief, then confirm visas and the day’s security note.`;
+    `${dest?.name ?? "This city"} is on the Gesht map. ${dest?.blurb ?? ""}`.trim();
 
   const journeyBits = [travel.body];
   if (origin && dest) {
@@ -312,7 +355,14 @@ export function curatedBrief(
     destination,
     journeyTitle: travel.title,
     journey: journeyBits.join(" "),
-    watchouts: [...(city?.watch ?? []), ...travel.tips.slice(0, 1)],
+    watchouts: [
+      ...(city?.watch ?? []),
+      visaFor(toId),
+      ...(airPlace && airPlace.id !== toId
+        ? [`Nearest metal is ${airPlace.iata ?? airPlace.name} — ${airPlace.name}.`]
+        : []),
+      ...travel.tips.slice(0, 1),
+    ],
     tips: [...(city?.tips ?? []), ...travel.tips.slice(1)],
     source: "curated",
   };

@@ -11,7 +11,7 @@ import {
   Luggage,
   Plane,
 } from "lucide-react";
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { DateField } from "@/components/search/date-field";
 import { PlaceField } from "@/components/search/place-field";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,16 @@ export function SearchConsole({
   }));
   const [step, setStep] = useState<Step>(initial?.to ? "when" : "to");
   const [expanded, setExpanded] = useState(!compact);
+  const [recent, setRecent] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("gesht-recent");
+      if (raw) setRecent(JSON.parse(raw) as string[]);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const dest = draft.to ? getPlace(draft.to) : undefined;
   const origin = draft.from ? getPlace(draft.from) : undefined;
@@ -103,6 +113,13 @@ export function SearchConsole({
       setExpanded(true);
       setStep("from");
       return;
+    }
+    try {
+      const next = [draft.to, ...recent.filter((id) => id !== draft.to)].slice(0, 6);
+      localStorage.setItem("gesht-recent", JSON.stringify(next));
+      setRecent(next);
+    } catch {
+      /* ignore */
     }
     void navigate({
       to: "/search",
@@ -187,7 +204,7 @@ export function SearchConsole({
                     : draft.mode === "weekends"
                       ? "Villas and apartments for the Thursday–Saturday empty-out. Shaqlawa, Dukan, Korek, or a city flat."
                       : draft.mode === "medical"
-                        ? "Hospitals in Erbil, Slemani, Baghdad — or outbound desks in Istanbul and Amman."
+                        ? "Hospitals at home, or Turkey, Jordan, Iran, and India — letter first on the long hops."
                         : "Kurdistan Region, Federal Iraq, or a gateway city."}
             </p>
           </div>
@@ -202,6 +219,23 @@ export function SearchConsole({
                   autoFocus={!compact}
                   onSelect={pickTo}
                 />
+                {recent.length ? (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {recent
+                      .map((id) => getPlace(id))
+                      .filter((p): p is Place => Boolean(p))
+                      .map((p) => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() => pickTo(p)}
+                          className="rounded-full bg-surface px-2.5 py-1 text-xs text-muted shadow-border hover:text-fg"
+                        >
+                          {p.name}
+                        </button>
+                      ))}
+                  </div>
+                ) : null}
               </div>
             ) : null}
 

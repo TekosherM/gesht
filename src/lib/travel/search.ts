@@ -1,6 +1,7 @@
 import trailsCatalog from "../../../data/trails.json";
 import { buses, flights, hotels, packages, roadNotes } from "./catalog";
 import { cheapest, haversineKm } from "./format";
+import { describeRoad } from "./meta";
 import { corridorOfCity } from "./care-corridors";
 import { care, stays } from "./outings";
 import { getPlace, localPlaces } from "./places";
@@ -112,7 +113,7 @@ export function searchCars(q: SearchQuery): CarOffer[] {
 
   const key = pairKey(from.id, to.id);
   const rev = pairKey(to.id, from.id);
-  const meta = roadNotes[key] ?? roadNotes[rev];
+  const meta = roadNotes[key] ?? roadNotes[rev] ?? describeRoad(from.id, to.id);
   const km = Math.round(haversineKm(from, to) * (meta?.road === "mountain" ? 1.55 : 1.32));
   const speed = meta?.road === "mountain" ? 48 : meta?.road === "mixed" ? 62 : 78;
   const hours = Math.max(0.8, km / speed);

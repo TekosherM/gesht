@@ -17,7 +17,7 @@ import { BookRow } from "@/components/results/book-row";
 import { Badge } from "@/components/ui/badge";
 import { airlineSite, busOutbounds, carOutbounds, flightOutbounds, hikeOutbounds, hospitalSite, hotelOutbounds, packageOutbounds } from "@/lib/travel/outbounds";
 import { Card } from "@/components/ui/card";
-import { cheapest, durationLabel, hoursLabel, usd } from "@/lib/travel/format";
+import { cheapest, durationLabel, hoursLabel, iqd, usd } from "@/lib/travel/format";
 import { nightsBetween } from "@/lib/travel/search";
 import { getPlace } from "@/lib/travel/places";
 import type {
@@ -385,6 +385,7 @@ function PriceStack({ sources, low }: { sources: { source: string; usd: number }
     <div className="shrink-0 sm:min-w-36 sm:text-right">
       <p className="text-xs text-muted">from</p>
       <p className="font-display text-3xl tabular-nums tracking-tight">{usd(low)}</p>
+      <p className="text-[11px] text-faint">{iqd(low)}</p>
       <ul className="mt-2 space-y-1 text-xs text-muted">
         {sources.map((s) => (
           <li key={s.source} className="flex justify-between gap-4 sm:justify-end sm:gap-3">

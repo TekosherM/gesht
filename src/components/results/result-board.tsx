@@ -13,6 +13,7 @@ import { cheapest } from "@/lib/travel/format";
 import operatorsCatalog from "../../../data/operators.json";
 import { alsoConsider, searchTravel } from "@/lib/travel/search";
 import { outboundsFor } from "@/lib/travel/outbounds";
+import { airportFor } from "@/lib/travel/meta";
 import { getPlace } from "@/lib/travel/places";
 import { modeMeta } from "@/lib/travel/params";
 import type { HikingGroup, OutboundLink, SearchQuery, TravelOffer } from "@/lib/travel/types";
@@ -36,6 +37,7 @@ export function ResultBoard({
   onMode: (mode: SearchQuery["mode"]) => void;
 }) {
   const [sort, setSort] = useState<"price" | "duration">("price");
+  const [grade, setGrade] = useState<"all" | "easy" | "moderate" | "hard">("all");
   const [guideOpen, setGuideOpen] = useState(true);
   const [api, setApi] = useState<ApiPayload | null>(null);
   const localOffers = useMemo(() => searchTravel(query), [query]);
@@ -69,10 +71,13 @@ export function ResultBoard({
     query.mode === "hiking" && api?.offers && api.offers.length > 0 ? api.offers : localOffers;
 
   const sorted = useMemo(() => {
-    const copy = [...offers];
+    const copy = [...offers].filter((o) => {
+      if (query.mode !== "hiking" || grade === "all" || o.kind !== "hike") return true;
+      return o.grade === grade;
+    });
     copy.sort((a, b) => score(a, sort) - score(b, sort));
     return copy;
-  }, [offers, sort]);
+  }, [offers, sort, grade, query.mode]);
 
   const dest = getPlace(query.to);
   const origin = query.from ? getPlace(query.from) : undefined;
@@ -120,6 +125,15 @@ export function ResultBoard({
                 Time
               </SortChip>
             </div>
+            {query.mode === "hiking" ? (
+              <div className="inline-flex rounded-md bg-sunken p-0.5">
+                {(["all", "easy", "moderate", "hard"] as const).map((g) => (
+                  <SortChip key={g} active={grade === g} onClick={() => setGrade(g)}>
+                    {g === "all" ? "All" : g}
+                  </SortChip>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -196,9 +210,27 @@ export function ResultBoard({
             <SlidersHorizontal className="mx-auto size-6 text-muted" />
             <p className="mt-3 font-display text-xl">No listings on this corridor</p>
             <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
-              Try Shaqlawa or Gali Ali Beg for hiking, a lake villa for the weekend, or Erbil
-              for care — or switch to car for any two cities inside Iraq and the KRG.
+              {query.mode === "flights" && airportFor(query.to)
+                ? `No metal into ${dest?.name}. Nearest airport is ${getPlace(airportFor(query.to) ?? "")?.name ?? "Erbil"}.`
+                : query.mode === "car"
+                  ? "Gesht will not invent a drive across a sea or a visa line. Fly, or pick two cities inside Iraq and the KRG."
+                  : "Try another city, or switch mode — car works for any two inland cities."}
             </p>
+            {alts.length ? (
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                {alts.map((a) => (
+                  <button
+                    key={a.mode}
+                    type="button"
+                    onClick={() => onMode(a.mode)}
+                    className="rounded-full bg-sunken px-3 py-1.5 text-xs font-medium"
+                  >
+                    {a.label}
+                    <span className="ml-1.5 text-muted">{a.detail}</span>
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
