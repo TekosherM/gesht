@@ -31,7 +31,9 @@ const journeys = [
   { id: "care-chennai", url: "/search?mode=medical&to=chennai", expect: [/Apollo|e-Medical/] },
   { id: "weekend-dukan", url: "/search?mode=weekends&to=dukan", expect: [/Dukan|Airbnb|Booking/] },
   { id: "hike-zawita", url: "/search?mode=hiking&to=zawita", expect: [/Zawita|forest|trail/i] },
-  { id: "providers", url: "/for-providers", expect: [/Search is free/, /Sponsored/, /Hiking clubs/] },
+  { id: "providers", url: "/for-providers", expect: [/Search is free/, /Sponsored/, /ticket desks/i, /facilitators/i] },
+  { id: "fly-desks", url: "/search?mode=flights&from=istanbul&to=erbil", expect: [/Ticket desks|RideFly|Gashtyar|Shaheen/] },
+  { id: "care-desks", url: "/search?mode=medical&to=istanbul", expect: [/Facilitators|Doctoury|Acıbadem/] },
   { id: "hike-desks", url: "/search?mode=hiking&to=hawraman", expect: [/Kurdistan Outdoors|Clubs and arrangers|Commercial desks/] },
 ];
 

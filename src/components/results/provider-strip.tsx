@@ -50,14 +50,13 @@ export function ProviderStrip({
                   <MessageCircle className="size-3.5" />
                   WhatsApp this desk
                 </a>
+              ) : p.website ? (
+                <a href={p.website} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                  {p.channel === "affiliate" ? "Open the same search" : p.website.replace(/^https?:\/\//, "")}
+                </a>
               ) : (
                 <span className="text-faint">No public WhatsApp yet — claim the desk.</span>
               )}
-              {p.website ? (
-                <a href={p.website} target="_blank" rel="noreferrer" className="text-primary hover:underline">
-                  {p.website.replace(/^https?:\/\//, "")}
-                </a>
-              ) : null}
             </div>
           </li>
         ))}

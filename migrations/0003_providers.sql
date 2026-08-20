@@ -2,7 +2,7 @@
 
 create table if not exists gesht_providers (
   id text primary key,
-  side text not null check (side in ('hike', 'stay', 'bus')),
+  side text not null check (side in ('hike', 'stay', 'bus', 'flight', 'hotel', 'package', 'car', 'care')),
   name text not null,
   city text not null,
   kind text not null,

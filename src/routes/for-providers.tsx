@@ -5,11 +5,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  RANKING_FEES,
-  supplyCounts,
-  type SupplySide,
-} from "@/lib/travel/marketplace";
+import { RANKING_FEES, supplyCounts, type SupplySide } from "@/lib/travel/marketplace";
 
 export const Route = createFileRoute("/for-providers")({
   component: ForProviders,
@@ -18,28 +14,58 @@ export const Route = createFileRoute("/for-providers")({
 
 const SIDES: { id: SupplySide; title: string; body: string; need: string }[] = [
   {
+    id: "flight",
+    title: "Flights — local ticket desks",
+    body: "Wego and Kayak stay affiliate. They already pay on click. The ranking fee is for Erbil, Slemani, and Baghdad IATA shops — RideFly, Gashtyar, Al Shaheen, the street agency that still quotes on WhatsApp. Airlines we only deep-link. Do not pretend there are 100 carriers into EBL.",
+    need: "IATA number, city, WhatsApp, airports you ticket, IQD or USD.",
+  },
+  {
+    id: "hotel",
+    title: "Hotels — the property, not Booking",
+    body: "Booking.com is the graph. Independent pensions, shrine hotels, and Erbil 4-stars pay to stand above “open Booking”. Chains can buy Spotlight. The unit is the front desk that answers at 11pm, not a second OTA.",
+    need: "Property name, rooms, nightly IQD, WhatsApp, photos. Dual-list with Booking is fine.",
+  },
+  {
+    id: "package",
+    title: "Packages — licensed inbound operators",
+    body: "There are not 100 Kurdistan tour companies. There are maybe fifty licensed desks. Same WhatsApp pipe as hiking, with a multi-day itinerary. Visit Kurdistan stays an inquiry, not a cart.",
+    need: "License, typical itineraries, season, pickup city, per-person IQD.",
+  },
+  {
+    id: "car",
+    title: "Cars — rental desks and with-driver",
+    body: "Hertz and Avis are the airport names. Most KRG kilometres are a driver-guide. Rank the person with the Land Cruiser, not a ghost fleet. Eighty desks is the ceiling: airport counters plus with-driver in Erbil, Slemani, Duhok, Baghdad.",
+    need: "Counter or driver name, cities, with-driver vs self-drive, day rate IQD, WhatsApp.",
+  },
+  {
+    id: "care",
+    title: "Care — facilitators pay, hospitals don’t",
+    body: "A cancer center is not a villa. Hospitals and specialties stay free and unranked by money. The ranking fee is for facilitators who file the letter and the hop. Never sell “rank #1 for surgery”.",
+    need: "Facilitator name, corridors (home / TR / JO / IR / IN), WhatsApp, languages, what they actually file.",
+  },
+  {
     id: "hike",
     title: "Hiking clubs and arrangers",
-    body: "Clubs stay free forever. Commercial guides pay only if they want the Sponsored strip. Searchers already land on Hawraman, Gali Ali Beg, Halgurd — we hand you the WhatsApp with the trail and the date filled in.",
-    need: "Name, city, WhatsApp, the trails you actually run, a typical Friday price in IQD, and whether you are a club or a paid desk.",
+    body: "Clubs stay free forever. Commercial guides pay only if they want the Sponsored strip.",
+    need: "Name, city, WhatsApp, trails, Friday price IQD, club or paid desk.",
   },
   {
     id: "stay",
     title: "Weekend villas and apartments",
-    body: "Shaqlawa, Dukan, Korek, Amedi. We are not Airbnb checkout. We are the Thursday search that ends in a call. Property managers with ten houses beat a hundred unmanaged listings.",
-    need: "Photos, sleeps-how-many, nightly IQD plus Friday premium, blocked dates, WhatsApp for the person who answers after 9pm.",
+    body: "Sign managers, not 100 Instagram pages. Thursday search, WhatsApp close.",
+    need: "Photos, sleeps-how-many, nightly IQD, Friday premium, WhatsApp after 9pm.",
   },
   {
     id: "bus",
     title: "Garages, VIP fleets, station guides",
-    body: "Iraq has almost no public bus API. Gesht lists the corridor, the usual window, the usual fare, and the phone that actually picks up. Guides at the garage are a product too.",
-    need: "Operator name, garage, corridors, depart window, fare IQD, VIP vs minibus, WhatsApp.",
+    body: "No GTFS. Corridor, window, fare, phone. Sixty operators is honest.",
+    need: "Operator, garage, corridors, window, fare IQD, VIP vs minibus, WhatsApp.",
   },
 ];
 
 function ForProviders() {
   const counts = useMemo(() => supplyCounts(), []);
-  const [side, setSide] = useState<SupplySide>("hike");
+  const [side, setSide] = useState<SupplySide>("flight");
   const [sent, setSent] = useState(false);
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
@@ -69,27 +95,28 @@ function ForProviders() {
             Search is free. Ranking is a fee.
           </h1>
           <p className="mt-4 max-w-2xl text-muted">
-            Travelers never pay Gesht. Clubs never pay Gesht. A Shaqlawa villa, a Halgurd guide, or a
-            VIP garage pays only to stand higher when someone searches their city. Every paid slot is
-            marked Sponsored. WhatsApp is the checkout.
+            Travelers never pay Gesht. Clubs and hospitals never pay. OTAs already pay as affiliates.
+            A ticket shop, a villa manager, a garage, or a medical facilitator pays only to stand
+            higher when someone searches their city. Paid slots are marked Sponsored. WhatsApp is
+            the checkout.
           </p>
 
-          <dl className="mt-8 grid gap-3 sm:grid-cols-3">
+          <dl className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {SIDES.map((s) => (
               <div key={s.id} className="rounded-xl bg-surface px-4 py-4 shadow-border">
-                <dt className="text-xs uppercase tracking-wide text-faint">{s.title}</dt>
+                <dt className="text-xs uppercase tracking-wide text-faint">{s.title.split(" — ")[0]}</dt>
                 <dd className="mt-1 font-display text-3xl tabular-nums">
                   {counts[s.id].listed}
                   <span className="ml-2 text-base text-muted">/ {counts[s.id].target}</span>
                 </dd>
-                <p className="mt-1 text-xs text-muted">listed now · target this year</p>
+                <p className="mt-1 text-xs text-muted">listed now · target</p>
               </div>
             ))}
           </dl>
 
           <section className="mt-12">
-            <h2 className="font-display text-2xl tracking-tight">What has to be true</h2>
-            <ol className="mt-4 grid gap-4 lg:grid-cols-3">
+            <h2 className="font-display text-2xl tracking-tight">Every medium, a different seller</h2>
+            <ol className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {SIDES.map((s) => (
                 <li key={s.id} className="rounded-xl bg-surface p-5 shadow-border">
                   <p className="font-display text-xl">{s.title}</p>
@@ -117,35 +144,29 @@ function ForProviders() {
             })}
           </section>
           <p className="mt-3 text-xs text-muted">
-            After thirty free WhatsApp opens a month, extra leads are 2,000 IQD each — only for
-            commercial desks, never clubs. Paid rank cannot hide a better unpaid fit; it can only
-            lift a complete listing.
+            Affiliates (Wego, Booking, airline sites) never buy IQD rank — they pay on the click we
+            already send. After thirty free WhatsApp opens a month, extra leads are 2,000 IQD each
+            for commercial desks. Never clubs. Never hospitals.
           </p>
 
           <section className="mt-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div>
-              <h2 className="font-display text-2xl tracking-tight">How 100 actually happens</h2>
+              <h2 className="font-display text-2xl tracking-tight">Two pipes, not one marketplace</h2>
               <ul className="mt-4 space-y-3 text-sm text-muted">
                 <li>
-                  <strong className="text-fg">Hiking.</strong> There are not 100 tour companies in the
-                  KRG. There are clubs, university groups, licensed individual guides, ZMT community
-                  hosts, and a few expedition desks. Count those as 100 desks. Clubs stay free.
-                  Operators claim a profile we already seeded.
+                  <strong className="text-fg">Affiliate.</strong> Flights and chain hotels already
+                  live on Wego and Booking. Gesht opens the same search. Revenue is CPA/CPC from
+                  those desks, not a ranking invoice in Erbil.
                 </li>
                 <li>
-                  <strong className="text-fg">Villas.</strong> Do not chase 100 Instagram pages. Sign
-                  20–30 managers who already run 5–20 houses each. Dual-list anyone already on Booking
-                  or OpenSooq. The unit of supply is the person who answers the phone on Thursday night.
+                  <strong className="text-fg">Local desk.</strong> IATA shops, villa managers,
+                  garages, with-driver, facilitators. They have no API. They have WhatsApp. Rank
+                  is a monthly IQD fee. Lead is a prefilled message with a Gesht id.
                 </li>
                 <li>
-                  <strong className="text-fg">Buses.</strong> Sixty operators is the honest ceiling:
-                  two Erbil terminals, Slemani garaj, Al-Nahda, Kirkuk, Basra, VIP Turkey lines, and
-                  station guides. Live GTFS will not appear. A weekly “still running?” WhatsApp will.
-                </li>
-                <li>
-                  <strong className="text-fg">Both sides.</strong> Searcher → ranked list → prefilled
-                  WhatsApp with a Gesht lead id → provider dashboard of inquiries. No card checkout in
-                  v1. FastPay / Qi Card / transfer for the ranking fee.
+                  <strong className="text-fg">Never for sale.</strong> Hiking clubs, hospital names,
+                  specialty lists. Money can lift a facilitator beside Acıbadem. It cannot bury
+                  King Hussein Cancer Center under a paid clinic.
                 </li>
               </ul>
             </div>
@@ -153,8 +174,7 @@ function ForProviders() {
             <form onSubmit={submit} className="rounded-2xl bg-surface p-5 shadow-lift">
               <p className="font-display text-xl">Claim or join</p>
               <p className="mt-1 text-sm text-muted">
-                We list you within two days if the WhatsApp is real. No ranking fee until you pick
-                Featured.
+                Listed in two days if the WhatsApp is real. No ranking fee until you pick Featured.
               </p>
               {sent ? (
                 <p className="mt-6 text-sm">
@@ -175,10 +195,10 @@ function ForProviders() {
                     ))}
                   </div>
                   <Input required placeholder="Desk or club name" value={name} onChange={(e) => setName(e.target.value)} />
-                  <Input required placeholder="City (Erbil, Slemani, Shaqlawa…)" value={city} onChange={(e) => setCity(e.target.value)} />
+                  <Input required placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
                   <Input required placeholder="WhatsApp with country code" value={phone} onChange={(e) => setPhone(e.target.value)} />
                   <Input
-                    placeholder="Trails, houses, or corridors you actually run"
+                    placeholder="What you actually sell"
                     value={inventory}
                     onChange={(e) => setInventory(e.target.value)}
                   />

@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cheapest } from "@/lib/travel/format";
 import operatorsCatalog from "../../../data/operators.json";
 import { alsoConsider, searchTravel } from "@/lib/travel/search";
-import { catalogGroupsFor, providersFor, sideForMode } from "@/lib/travel/marketplace";
+import { catalogGroupsFor, desksFor, sideForMode, STRIP_TITLE } from "@/lib/travel/marketplace";
 import { outboundsFor } from "@/lib/travel/outbounds";
 import { airportFor } from "@/lib/travel/meta";
 import { getPlace } from "@/lib/travel/places";
@@ -188,20 +188,10 @@ export function ResultBoard({
           <HikingGroups groups={api?.groups?.length ? api.groups : catalogGroupsFor(query.to)} />
         ) : null}
 
-        {!loading && sideForMode(query.mode) ? (
+        {!loading ? (
           <ProviderStrip
-            title={
-              query.mode === "hiking"
-                ? "Commercial desks"
-                : query.mode === "weekends"
-                  ? "Houses that answer on Thursday"
-                  : "Garages and VIP desks"
-            }
-            providers={
-              query.mode === "hiking"
-                ? providersFor("hike", query.to).filter((p) => !p.club).slice(0, 8)
-                : providersFor(sideForMode(query.mode)!, query.to).slice(0, 8)
-            }
+            title={STRIP_TITLE[query.mode]}
+            providers={desksFor(sideForMode(query.mode), query.to).slice(0, 8)}
             query={query}
           />
         ) : null}
