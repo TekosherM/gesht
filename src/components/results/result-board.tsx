@@ -4,6 +4,7 @@ import { AgentGuide } from "@/components/guide/agent-guide";
 import { RouteArc, SourceSweep } from "@/components/live-bits";
 import { CareCorridors } from "@/components/results/care-corridors";
 import { HikingGroups } from "@/components/results/hiking-groups";
+import { ProviderStrip } from "@/components/results/provider-strip";
 import { OperatorsRow, type Desk } from "@/components/results/operators-row";
 import { OutboundLinks } from "@/components/results/outbound-links";
 import { ResultCard } from "@/components/results/result-cards";
@@ -12,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cheapest } from "@/lib/travel/format";
 import operatorsCatalog from "../../../data/operators.json";
 import { alsoConsider, searchTravel } from "@/lib/travel/search";
+import { catalogGroupsFor, providersFor, sideForMode } from "@/lib/travel/marketplace";
 import { outboundsFor } from "@/lib/travel/outbounds";
 import { airportFor } from "@/lib/travel/meta";
 import { getPlace } from "@/lib/travel/places";
@@ -183,7 +185,25 @@ export function ResultBoard({
         </div>
 
         {!loading && query.mode === "hiking" ? (
-          <HikingGroups groups={api?.groups ?? []} />
+          <HikingGroups groups={api?.groups?.length ? api.groups : catalogGroupsFor(query.to)} />
+        ) : null}
+
+        {!loading && sideForMode(query.mode) ? (
+          <ProviderStrip
+            title={
+              query.mode === "hiking"
+                ? "Commercial desks"
+                : query.mode === "weekends"
+                  ? "Houses that answer on Thursday"
+                  : "Garages and VIP desks"
+            }
+            providers={
+              query.mode === "hiking"
+                ? providersFor("hike", query.to).filter((p) => !p.club).slice(0, 8)
+                : providersFor(sideForMode(query.mode)!, query.to).slice(0, 8)
+            }
+            query={query}
+          />
         ) : null}
 
         {!loading ? (

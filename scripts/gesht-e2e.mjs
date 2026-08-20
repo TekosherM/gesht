@@ -31,6 +31,8 @@ const journeys = [
   { id: "care-chennai", url: "/search?mode=medical&to=chennai", expect: [/Apollo|e-Medical/] },
   { id: "weekend-dukan", url: "/search?mode=weekends&to=dukan", expect: [/Dukan|Airbnb|Booking/] },
   { id: "hike-zawita", url: "/search?mode=hiking&to=zawita", expect: [/Zawita|forest|trail/i] },
+  { id: "providers", url: "/for-providers", expect: [/Search is free/, /Sponsored/, /Hiking clubs/] },
+  { id: "hike-desks", url: "/search?mode=hiking&to=hawraman", expect: [/Kurdistan Outdoors|Clubs and arrangers|Commercial desks/] },
 ];
 
 const browser = await chromium.launch();

@@ -35,8 +35,8 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
           <Link to="/" hash="weekends" className="transition-colors hover:text-fg">
             Weekends
           </Link>
-          <Link to="/" hash="care" className="transition-colors hover:text-fg">
-            Care
+          <Link to="/for-providers" className="transition-colors hover:text-fg">
+            List a desk
           </Link>
         </nav>
 

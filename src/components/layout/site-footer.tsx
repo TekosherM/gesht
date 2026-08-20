@@ -19,8 +19,8 @@ export function SiteFooter() {
           <Link to="/" hash="care" className="hover:text-fg">
             Care
           </Link>
-          <Link to="/login" className="hover:text-fg">
-            Account
+          <Link to="/for-providers" className="hover:text-fg">
+            List a desk
           </Link>
         </div>
       </div>
