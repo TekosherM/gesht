@@ -9,6 +9,7 @@ import { ResultCard } from "@/components/results/result-cards";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cheapest } from "@/lib/travel/format";
+import operatorsCatalog from "../../../data/operators.json";
 import { alsoConsider, searchTravel } from "@/lib/travel/search";
 import { outboundsFor } from "@/lib/travel/outbounds";
 import { getPlace } from "@/lib/travel/places";
@@ -168,7 +169,24 @@ export function ResultBoard({
           <HikingGroups groups={api?.groups ?? []} />
         ) : null}
 
-        {!loading ? <OperatorsRow desks={api?.operators ?? []} /> : null}
+        {!loading ? (
+          <OperatorsRow
+            desks={
+              api?.operators && api.operators.length
+                ? api.operators
+                : (operatorsCatalog as Array<Desk & { modes?: string[]; booking_style?: string }>).
+                    filter((d) => (d.modes ?? []).includes(query.mode)).
+                    map((d) => ({
+                      id: d.id,
+                      name: d.name,
+                      city: d.city,
+                      website: d.website,
+                      bookingStyle: d.bookingStyle ?? d.booking_style,
+                      notes: d.notes,
+                    }))
+            }
+          />
+        ) : null}
 
         {!loading && sorted.length === 0 ? (
           <div className="mt-8 rounded-xl bg-surface px-6 py-12 text-center shadow-border">

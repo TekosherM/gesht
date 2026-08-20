@@ -31,6 +31,22 @@ export function airlineSite(name: string): string | undefined {
   return first ? pages[first] : undefined;
 }
 
+export function hospitalSite(name: string): string | undefined {
+  const pages: Record<string, string> = {
+    "PAR Hospital": "https://www.parhospital.org",
+    CMC: "https://www.cmcph.net",
+    "Zheen International": "https://www.zheen-hospital.com",
+    "Shar Hospital": "https://www.shar-hospital.net",
+    "Faruk Medical City": "https://www.farukmedicalcity.com",
+    "Ibn Sina": "https://www.doctoury.com",
+    "Medical City": "https://www.doctoury.com",
+    Acıbadem: "https://acibademinternational.com",
+    "Abdali Hospital": "https://www.abdalihospital.com/planning-your-trip",
+    "Aster & city clinics": "https://www.doctoury.com",
+  };
+  return pages[name];
+}
+
 export function flightOutbounds(
   fromIata: string,
   toIata: string,
@@ -122,14 +138,65 @@ export function hotelOutbounds(
   ];
 }
 
-export function outboundsFor(mode: TravelMode, query: {
-  from?: string;
-  to: string;
-  depart: string;
-  returnDate?: string;
-  guests: number;
-  rooms: number;
-}): OutboundLink[] {
+export function busOutbounds(fromName: string, toName: string): OutboundLink[] {
+  return [
+    {
+      source: "Obilet",
+      kind: "ota",
+      label: "Turkey–KRG on Obilet",
+      url: "https://www.obilet.com/en/bus-ticket/istanbul-erbil",
+    },
+    { source: "Rama Travel", kind: "tour", label: "Rama Travel (Duhok)", url: "https://ramatravel.net/" },
+    {
+      source: "Rome2Rio",
+      kind: "hint",
+      label: "Corridor overview",
+      url: `https://www.rome2rio.com/s/${q(fromName)}/${q(toName)}`,
+    },
+  ];
+}
+
+export function carOutbounds(fromName: string, toName: string): OutboundLink[] {
+  return [
+    {
+      source: "Google Maps",
+      kind: "map",
+      label: "Drive this corridor",
+      url: `https://www.google.com/maps/dir/?api=1&origin=${q(fromName)}&destination=${q(toName)}&travelmode=driving`,
+    },
+    { source: "Hertz", kind: "rental", label: "Hertz Erbil (Cihan)", url: "https://www.hertz.com/us/en/location/iraq/erbil" },
+    { source: "Avis", kind: "rental", label: "Avis Erbil", url: "https://www.avis.com/en/locations/me/iq/erbil" },
+  ];
+}
+
+export function hikeOutbounds(): OutboundLink[] {
+  return [
+    { source: "Zagros Mountain Trail", kind: "tour", label: "Zagros Mountain Trail", url: "https://www.zagrosmountaintrail.org/" },
+    { source: "Kurdistan Outdoors", kind: "club", label: "Kurdistan Outdoors", url: "https://kurdistanoutdoor.com" },
+    { source: "Visit Kurdistan", kind: "tour", label: "Visit Kurdistan", url: "https://visitkurdistan.krd/" },
+  ];
+}
+
+export function packageOutbounds(): OutboundLink[] {
+  return [
+    { source: "Visit Kurdistan", kind: "tour", label: "Visit Kurdistan", url: "https://visitkurdistan.krd/" },
+    { source: "Iraqi Kurdistan Guide", kind: "tour", label: "Haval Qaraman", url: "https://www.iraqikurdistanguide.com" },
+    { source: "Wander Iraq", kind: "tour", label: "Wander Iraq", url: "https://wanderiraq.com" },
+    { source: "Iraq Travel and Tours", kind: "tour", label: "Iraq Travel and Tours", url: "https://iraqtravelandtours.com" },
+  ];
+}
+
+export function outboundsFor(
+  mode: TravelMode,
+  query: {
+    from?: string;
+    to: string;
+    depart: string;
+    returnDate?: string;
+    guests: number;
+    rooms: number;
+  },
+): OutboundLink[] {
   const dest = getPlace(query.to);
   const origin = query.from ? getPlace(query.from) : undefined;
   const destName = dest?.name ?? query.to;
@@ -158,39 +225,12 @@ export function outboundsFor(mode: TravelMode, query: {
     ];
   }
   if (mode === "bus") {
-    return [
-      { source: "Obilet", kind: "ota", label: "Turkey–KRG coaches on Obilet", url: "https://www.obilet.com/en/bus-ticket/istanbul-erbil" },
-      { source: "Rama Travel", kind: "tour", label: "Rama Travel (Duhok)", url: "https://ramatravel.net/" },
-      {
-        source: "Rome2Rio",
-        kind: "hint",
-        label: "Corridor overview — not a ticket",
-        url: `https://www.rome2rio.com/s/${q(origin?.name ?? "Erbil")}/${q(destName)}`,
-      },
-    ];
+    return busOutbounds(origin?.name ?? "Erbil", destName);
   }
   if (mode === "car") {
-    const o = q(origin?.name ?? destName);
-    const d = q(destName);
-    return [
-      {
-        source: "Google Maps",
-        kind: "map",
-        label: "Drive this corridor",
-        url: `https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${d}&travelmode=driving`,
-      },
-      { source: "Hertz", kind: "rental", label: "Hertz Erbil (Cihan)", url: "https://www.hertz.com/us/en/location/iraq/erbil" },
-      { source: "Avis", kind: "rental", label: "Avis Erbil", url: "https://www.avis.com/en/locations/me/iq/erbil" },
-      { source: "Sixt", kind: "rental", label: "Sixt Iraq", url: "https://www.sixt.com/car-rental/iraq/erbil/" },
-    ];
+    return carOutbounds(origin?.name ?? destName, destName);
   }
-  if (mode === "hiking") {
-    return [
-      { source: "Zagros Mountain Trail", kind: "tour", label: "Zagros Mountain Trail", url: "https://www.zagrosmountaintrail.org/" },
-      { source: "Visit Kurdistan", kind: "tour", label: "Visit Kurdistan", url: "https://visitkurdistan.krd/" },
-      { source: "Kurdistan Outdoors", kind: "club", label: "Kurdistan Outdoors", url: "https://kurdistanoutdoor.com" },
-    ];
-  }
+  if (mode === "hiking") return hikeOutbounds();
   if (mode === "medical") {
     return [
       { source: "PAR Hospital", kind: "hospital", label: "PAR Erbil", url: "https://www.parhospital.org" },
@@ -199,12 +239,6 @@ export function outboundsFor(mode: TravelMode, query: {
       { source: "Acıbadem", kind: "hospital", label: "Acıbadem International", url: "https://acibademinternational.com" },
     ];
   }
-  if (mode === "packages") {
-    return [
-      { source: "Visit Kurdistan", kind: "tour", label: "Visit Kurdistan", url: "https://visitkurdistan.krd/" },
-      { source: "Iraqi Kurdistan Guide", kind: "tour", label: "Haval Qaraman", url: "https://www.iraqikurdistanguide.com" },
-      { source: "Iraq Travel and Tours", kind: "tour", label: "Iraq Travel and Tours", url: "https://iraqtravelandtours.com" },
-    ];
-  }
+  if (mode === "packages") return packageOutbounds();
   return [];
 }

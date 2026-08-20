@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { BookRow } from "@/components/results/book-row";
 import { Badge } from "@/components/ui/badge";
-import { airlineSite, flightOutbounds, hotelOutbounds } from "@/lib/travel/outbounds";
+import { airlineSite, busOutbounds, carOutbounds, flightOutbounds, hikeOutbounds, hospitalSite, hotelOutbounds, packageOutbounds } from "@/lib/travel/outbounds";
 import { Card } from "@/components/ui/card";
 import { cheapest, durationLabel, hoursLabel, usd } from "@/lib/travel/format";
 import { nightsBetween } from "@/lib/travel/search";
@@ -165,6 +165,7 @@ function BusCard({ offer }: { offer: BusOffer }) {
             </div>
             <TimeBlock time={offer.arrive} code={to?.name} city="Garage" align="right" />
           </div>
+          <BookRow links={busOutbounds(from?.name ?? offer.from, to?.name ?? offer.to)} />
         </div>
         <PriceStack sources={offer.sources} low={low} />
       </div>
@@ -198,6 +199,7 @@ function CarCard({ offer }: { offer: CarOffer }) {
           <li key={n}>{n}</li>
         ))}
       </ul>
+      <BookRow links={carOutbounds(from?.name ?? offer.from, to?.name ?? offer.to)} />
     </Card>
   );
 }
@@ -222,6 +224,7 @@ function PackageCard({ offer }: { offer: PackageOffer }) {
           <p className="text-xs text-muted">from</p>
           <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
           <p className="text-xs text-muted">per person</p>
+          <BookRow links={packageOutbounds()} />
         </div>
       </div>
     </Card>
@@ -257,6 +260,7 @@ function HikeCard({ offer }: { offer: HikeOffer }) {
           <p className="text-xs text-muted">guided day from</p>
           <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
           <p className="text-xs text-muted">per person</p>
+          <BookRow links={hikeOutbounds()} />
         </div>
       </div>
     </Card>
@@ -333,6 +337,21 @@ function CareCard({ offer }: { offer: CareOffer }) {
           <p className="text-xs text-muted">indicative package</p>
           <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.priceUsd)}</p>
           <p className="text-xs text-muted">confirm at the desk</p>
+          <BookRow
+            links={
+              hospitalSite(offer.hospital)
+                ? [
+                    {
+                      source: offer.hospital,
+                      kind: "hospital",
+                      label: "Hospital desk",
+                      url: hospitalSite(offer.hospital)!,
+                    },
+                    { source: "Doctoury", kind: "ota", label: "Doctoury", url: "https://www.doctoury.com" },
+                  ]
+                : [{ source: "Doctoury", kind: "ota", label: "Doctoury", url: "https://www.doctoury.com" }]
+            }
+          />
         </div>
       </div>
     </Card>
