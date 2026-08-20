@@ -1,16 +1,28 @@
 import { Compass, SlidersHorizontal } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AgentGuide } from "@/components/guide/agent-guide";
 import { RouteArc, SourceSweep } from "@/components/live-bits";
+import { HikingGroups } from "@/components/results/hiking-groups";
+import { OperatorsRow, type Desk } from "@/components/results/operators-row";
+import { OutboundLinks } from "@/components/results/outbound-links";
 import { ResultCard } from "@/components/results/result-cards";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cheapest } from "@/lib/travel/format";
 import { alsoConsider, searchTravel } from "@/lib/travel/search";
+import { outboundsFor } from "@/lib/travel/outbounds";
 import { getPlace } from "@/lib/travel/places";
 import { modeMeta } from "@/lib/travel/params";
-import type { SearchQuery, TravelOffer } from "@/lib/travel/types";
+import type { HikingGroup, OutboundLink, SearchQuery, TravelOffer } from "@/lib/travel/types";
 import { cn } from "@/lib/utils";
+
+type ApiPayload = {
+  offers?: TravelOffer[];
+  outbounds?: OutboundLink[];
+  groups?: HikingGroup[];
+  operators?: Desk[];
+  disclaimer?: string;
+};
 
 export function ResultBoard({
   query,
@@ -23,8 +35,36 @@ export function ResultBoard({
 }) {
   const [sort, setSort] = useState<"price" | "duration">("price");
   const [guideOpen, setGuideOpen] = useState(true);
-  const offers = useMemo(() => searchTravel(query), [query]);
+  const [api, setApi] = useState<ApiPayload | null>(null);
+  const localOffers = useMemo(() => searchTravel(query), [query]);
   const alts = useMemo(() => alsoConsider(query), [query]);
+
+  useEffect(() => {
+    const params = new URLSearchParams({
+      mode: query.mode,
+      to: query.to,
+      depart: query.depart,
+      guests: String(query.guests),
+      rooms: String(query.rooms),
+    });
+    if (query.from) params.set("from", query.from);
+    if (query.returnDate) params.set("returnDate", query.returnDate);
+    let dead = false;
+    fetch(`/api/gesht/search?${params}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("search"))))
+      .then((data: ApiPayload) => {
+        if (!dead) setApi(data);
+      })
+      .catch(() => {
+        if (!dead) setApi(null);
+      });
+    return () => {
+      dead = true;
+    };
+  }, [query.mode, query.to, query.from, query.depart, query.returnDate, query.guests, query.rooms]);
+
+  const offers =
+    query.mode === "hiking" && api?.offers && api.offers.length > 0 ? api.offers : localOffers;
 
   const sorted = useMemo(() => {
     const copy = [...offers];
@@ -47,18 +87,14 @@ export function ResultBoard({
             </p>
             {origin && dest ? (
               <div className="mt-2 max-w-md">
-                <RouteArc
-                  from={fromCode}
-                  to={toCode}
-                  meta={`${origin.name} → ${dest.name}`}
-                />
+                <RouteArc from={fromCode} to={toCode} meta={`${origin.name} → ${dest.name}`} />
               </div>
             ) : (
               <h1 className="font-display text-3xl tracking-tight sm:text-4xl">{dest?.name}</h1>
             )}
             <p className="mt-1 text-sm text-muted">
               {loading
-                ? "Sweeping sources…"
+                ? "Sweeping desks…"
                 : sorted.length
                   ? `${sorted.length} option${sorted.length === 1 ? "" : "s"}`
                   : "Nothing listed for this pair yet — try another city or mode."}
@@ -92,6 +128,14 @@ export function ResultBoard({
           <SourceSweep running={loading} mode={query.mode} />
         </div>
 
+        <OutboundLinks
+          links={api?.outbounds?.length ? api.outbounds : outboundsFor(query.mode, query)}
+          disclaimer={
+            api?.disclaimer ??
+            "Gesht opens the same search on the desk that holds the seats. Live prices live there."
+          }
+        />
+
         {alts.length ? (
           <div className="mt-4 flex flex-wrap gap-2">
             {alts.map((a) => (
@@ -119,6 +163,12 @@ export function ResultBoard({
                 </div>
               ))}
         </div>
+
+        {!loading && query.mode === "hiking" ? (
+          <HikingGroups groups={api?.groups ?? []} />
+        ) : null}
+
+        {!loading ? <OperatorsRow desks={api?.operators ?? []} /> : null}
 
         {!loading && sorted.length === 0 ? (
           <div className="mt-8 rounded-xl bg-surface px-6 py-12 text-center shadow-border">

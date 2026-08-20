@@ -59,16 +59,16 @@ export function LocalClock() {
 }
 
 const SOURCE_SETS: Record<string, string[]> = {
-  hiking: ["Local guide", "Cihan day tour", "Driver-guide", "Trail desk"],
-  weekends: ["Villa broker", "Booking", "Airbnb", "Host"],
-  medical: ["Hospital desk", "Facilitator", "Airline", "Hotel"],
+  hiking: ["Zagros Mountain Trail", "Kurdistan Outdoors", "Rock Ur Bones", "Choman guides"],
+  weekends: ["Booking", "Airbnb", "OpenSooq", "Villa broker"],
+  medical: ["PAR Hospital", "Faruk Medical City", "Doctoury", "Acıbadem"],
   default: [
-    "Iraqi Airways",
-    "Fly Baghdad",
+    "RideFly",
     "Wego",
     "Skyscanner",
-    "Cihan Travel",
-    "Station window",
+    "Kayak",
+    "Iraqi Airways",
+    "Pegasus",
   ],
 };
 

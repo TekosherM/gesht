@@ -105,8 +105,10 @@ export type HikeOffer = {
   kind: "hike";
   id: string;
   trail: string;
+  localName?: string;
   city: string;
   bases: string[];
+  range?: string;
   grade: "easy" | "moderate" | "hard";
   km: number;
   hours: number;
@@ -114,6 +116,26 @@ export type HikeOffer = {
   priceUsd: number;
   includes: string[];
   note: string;
+  groupIds?: string[];
+};
+
+export type HikingGroup = {
+  id: string;
+  name: string;
+  city: string;
+  kind: string;
+  founded?: string | null;
+  ranges: string[];
+  note: string;
+  how: string;
+  website?: string | null;
+};
+
+export type OutboundLink = {
+  source: string;
+  kind: string;
+  label: string;
+  url: string;
 };
 
 export type StayOffer = {

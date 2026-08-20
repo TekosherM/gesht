@@ -1,6 +1,7 @@
+import trailsCatalog from "../../../data/trails.json";
 import { buses, flights, hotels, packages, roadNotes } from "./catalog";
-import { care, hikes, stays } from "./outings";
 import { cheapest, haversineKm } from "./format";
+import { care, stays } from "./outings";
 import { getPlace, localPlaces } from "./places";
 import type {
   BusOffer,
@@ -119,8 +120,42 @@ export function searchPackages(q: SearchQuery): PackageOffer[] {
 }
 
 export function searchHikes(q: SearchQuery): HikeOffer[] {
-  return hikes
+  const rows = trailsCatalog as Array<{
+    id: string;
+    trail: string;
+    localName?: string;
+    city: string;
+    bases: string[];
+    range?: string;
+    grade: HikeOffer["grade"];
+    km: number;
+    hours: number;
+    season: string;
+    priceUsd: number;
+    includes: string[];
+    note: string;
+    groups?: string[];
+  }>;
+  return rows
+    .filter((h) => h.priceUsd > 0)
     .filter((h) => h.city === q.to || h.bases.includes(q.to) || (q.from && h.bases.includes(q.from)))
+    .map((h) => ({
+      kind: "hike" as const,
+      id: h.id.startsWith("hike-") ? h.id : `hike-${h.id}`,
+      trail: h.trail,
+      localName: h.localName,
+      city: h.city,
+      bases: h.bases,
+      range: h.range,
+      grade: h.grade,
+      km: h.km,
+      hours: h.hours,
+      season: h.season,
+      priceUsd: h.priceUsd,
+      includes: h.includes,
+      note: h.note,
+      groupIds: h.groups,
+    }))
     .sort((a, b) => a.priceUsd - b.priceUsd);
 }
 

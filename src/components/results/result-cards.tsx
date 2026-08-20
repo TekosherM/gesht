@@ -13,7 +13,9 @@ import {
   Star,
   Trees,
 } from "lucide-react";
+import { BookRow } from "@/components/results/book-row";
 import { Badge } from "@/components/ui/badge";
+import { airlineSite, flightOutbounds, hotelOutbounds } from "@/lib/travel/outbounds";
 import { Card } from "@/components/ui/card";
 import { cheapest, durationLabel, hoursLabel, usd } from "@/lib/travel/format";
 import { nightsBetween } from "@/lib/travel/search";
@@ -34,7 +36,7 @@ import type {
 export function ResultCard({ offer, query }: { offer: TravelOffer; query: SearchQuery }) {
   switch (offer.kind) {
     case "flight":
-      return <FlightCard offer={offer} />;
+      return <FlightCard offer={offer} query={query} />;
     case "hotel":
       return <HotelCard offer={offer} query={query} />;
     case "bus":
@@ -52,10 +54,15 @@ export function ResultCard({ offer, query }: { offer: TravelOffer; query: Search
   }
 }
 
-function FlightCard({ offer }: { offer: FlightOffer }) {
+function FlightCard({ offer, query }: { offer: FlightOffer; query: SearchQuery }) {
   const from = getPlace(offer.from);
   const to = getPlace(offer.to);
   const low = cheapest(offer.sources);
+  const airline = airlineSite(offer.airline);
+  const ota =
+    from?.iata && to?.iata
+      ? flightOutbounds(from.iata, to.iata, query.depart, query.guests, query.returnDate).slice(0, 3)
+      : [];
   return (
     <Card className="p-4 hover-lift sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -77,6 +84,14 @@ function FlightCard({ offer }: { offer: FlightOffer }) {
             </div>
             <TimeBlock time={offer.arrive} code={to?.iata ?? to?.name} city={to?.name} align="right" />
           </div>
+          <BookRow
+            links={[
+              ...(airline
+                ? [{ source: offer.airline, kind: "airline", label: `Airline desk`, url: airline }]
+                : []),
+              ...ota,
+            ]}
+          />
         </div>
         <PriceStack sources={offer.sources} low={low} />
       </div>
@@ -110,7 +125,16 @@ function HotelCard({ offer, query }: { offer: HotelOffer; query: SearchQuery }) 
           <p className="text-xs text-muted">per night</p>
           <p className="font-display text-3xl tabular-nums tracking-tight">{usd(offer.nightlyUsd)}</p>
           <p className="text-xs text-muted">{nights} night{nights === 1 ? "" : "s"} · {usd(offer.nightlyUsd * nights)}</p>
-          <p className="mt-2 text-xs text-faint">Booking · Agoda · Hotel</p>
+          <p className="mt-2 text-xs text-faint">Indicative — confirm on the desk</p>
+          <BookRow
+            links={hotelOutbounds(
+              getPlace(offer.city)?.name ?? offer.city,
+              query.depart,
+              query.returnDate,
+              query.guests,
+              query.rooms,
+            ).slice(0, 3)}
+          />
         </div>
       </div>
     </Card>
@@ -211,11 +235,12 @@ function HikeCard({ offer }: { offer: HikeOffer }) {
         <div>
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted">
             <Footprints className="size-3.5" />
-            <span>{getPlace(offer.city)?.name}</span>
+            <span>{offer.range ?? getPlace(offer.city)?.name}</span>
             <Badge className="capitalize">{offer.grade}</Badge>
             <span className="text-faint">{offer.season}</span>
           </div>
           <h3 className="mt-1 font-display text-xl tracking-tight">{offer.trail}</h3>
+          {offer.localName ? <p className="text-sm text-faint">{offer.localName}</p> : null}
           <p className="mt-1 text-sm text-muted">{offer.note}</p>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             <Stat icon={Route} label="Distance" value={`${offer.km} km`} />
@@ -267,6 +292,15 @@ function StayCard({ offer, query }: { offer: StayOffer; query: SearchQuery }) {
             {nights} night{nights === 1 ? "" : "s"} · {usd(offer.nightlyUsd * nights)}
           </p>
           <p className="mt-2 text-xs text-faint">Broker · Booking · Host</p>
+          <BookRow
+            links={hotelOutbounds(
+              getPlace(offer.city)?.name ?? offer.city,
+              query.depart,
+              query.returnDate,
+              query.guests,
+              1,
+            ).slice(0, 2)}
+          />
         </div>
       </div>
     </Card>

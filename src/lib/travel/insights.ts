@@ -128,6 +128,32 @@ const cityCopy: Record<string, { about: string; tips: string[]; watch: string[] 
     tips: ["Sleep in town if you want the dawn ridge."],
     watch: ["Nowruz week is not a villa weekend. Book months ahead or skip."],
   },
+  hawraman: {
+    about:
+      "Hawraman is terraced villages on the Iranian border — Tawela and Biyara. Walks are village paths, not a waymarked long trail.",
+    tips: ["Go in spring or walnut season. Pair with Halabja, not a same-day Slemani dash."],
+    watch: ["Border district. Stay on used paths."],
+  },
+  zawita: {
+    about: "Zawita is pine country above Duhok and the first signed forest trail in the governorate.",
+    tips: ["Do the 11 km loop in the morning. Dinner back in Duhok."],
+    watch: ["Do not confuse Zawa city hill with Zawita forest."],
+  },
+  sarsing: {
+    about: "Sarsing sits under Gara. Cooler than the Duhok bowl; a weekend, not a flight.",
+    tips: ["Use it as the Gara base. Check access the morning you go."],
+    watch: ["Gara has a conflict history. Local guide."],
+  },
+  shanidar: {
+    about: "Shanidar is the Neanderthal cave above Barzan. A short walk from the car park.",
+    tips: ["Spring or autumn. Combine with Barzan, not a peak day."],
+    watch: ["Summer on the slope is brutal."],
+  },
+  alqosh: {
+    about: "Alqosh is a Nineveh Plains town under the Rabban Hormizd monastery. Stairs, not a trail.",
+    tips: ["Federal Iraq rules apply. Confirm the day’s security note."],
+    watch: ["Not inside the KRG e-visa bubble."],
+  },
 };
 
 const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[] }> = {
