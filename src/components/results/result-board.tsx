@@ -2,6 +2,7 @@ import { Compass, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { AgentGuide } from "@/components/guide/agent-guide";
 import { RouteArc, SourceSweep } from "@/components/live-bits";
+import { CareCorridors } from "@/components/results/care-corridors";
 import { HikingGroups } from "@/components/results/hiking-groups";
 import { OperatorsRow, type Desk } from "@/components/results/operators-row";
 import { OutboundLinks } from "@/components/results/outbound-links";
@@ -121,6 +122,8 @@ export function ResultBoard({
             </div>
           </div>
         </div>
+
+        {!loading && query.mode === "medical" ? <CareCorridors query={query} /> : null}
 
         <div className="mt-4 rounded-xl bg-surface/80 p-3 shadow-border">
           <p className="mb-2 text-[11px] font-medium tracking-wide text-faint uppercase">

@@ -50,5 +50,10 @@
   {"id":"kiwi","name":"Kiwi","modes":["flights"],"city":null,"website":"https://www.kiwi.com","booking_style":"ota","notes":"Virtual interline. EBL works."},
   {"id":"momondo","name":"Momondo","modes":["flights"],"city":null,"website":"https://www.momondo.com","booking_style":"ota","notes":"Kayak sister."},
   {"id":"hertz","name":"Hertz Iraq (Cihan)","modes":["car"],"city":"erbil","website":"https://www.hertz.com/us/en/location/iraq/erbil","booking_style":"rental","notes":"Cihan franchise. EBL airport, Ankawa, Duhok, Slemani."},
-  {"id":"avis","name":"Avis Erbil","modes":["car"],"city":"erbil","website":"https://www.avis.com/en/locations/me/iq/erbil","booking_style":"rental","notes":"EBL airport and Divan Gulan."}
+  {"id":"avis","name":"Avis Erbil","modes":["car"],"city":"erbil","website":"https://www.avis.com/en/locations/me/iq/erbil","booking_style":"rental","notes":"EBL airport and Divan Gulan."},
+  {"id":"doctoury","name":"Doctoury","modes":["medical"],"city":"erbil","website":"https://www.doctoury.com","booking_style":"facilitator","notes":"Iraq doctor booking plus Turkey, Jordan, India desks."},
+  {"id":"acibadem-op","name":"Acıbadem International","modes":["medical"],"city":"istanbul","website":"https://acibademinternational.com","booking_style":"hospital","notes":"Default Istanbul campus from the KRG."},
+  {"id":"khcc-op","name":"King Hussein Cancer Center","modes":["medical"],"city":"amman","website":"https://www.khcc.jo","booking_style":"hospital","notes":"Regional oncology. File first, then the ticket."},
+  {"id":"royan-op","name":"Royan Institute","modes":["medical"],"city":"tehran","website":"https://www.royaninstitute.org","booking_style":"hospital","notes":"Fertility campus. Cash corridor from Slemani."},
+  {"id":"medanta-op","name":"Medanta","modes":["medical"],"city":"delhi","website":"https://www.medanta.org","booking_style":"hospital","notes":"e-Medical visa letter first."}
 ]

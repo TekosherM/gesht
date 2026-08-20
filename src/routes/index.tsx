@@ -11,8 +11,8 @@ import { StarGlyph } from "@/components/star";
 import { defaultDepartIso, defaultReturnIso } from "@/lib/travel/format";
 import {
   featuredDestinations,
+  getPlace,
   hikeDestinations,
-  medicalDestinations,
   weekendDestinations,
 } from "@/lib/travel/places";
 import type { Place, TravelMode } from "@/lib/travel/types";
@@ -98,8 +98,12 @@ function Home() {
             id="care"
             kicker="Medical travel"
             title="Clinics, coordinators, the waiting room"
-            lede="Erbil and Slemani inbound. Baghdad by referral. Istanbul and Amman when the campus needs to be larger."
-            places={medicalDestinations.filter((p) => p.image)}
+            lede="Stay in Erbil or Slemani when you can. Turkey is the default upgrade. Jordan for Arabic oncology. Iran by land from Slemani. India when the letter and the e-Medical visa come first."
+            places={
+              ["erbil", "istanbul", "amman", "tehran", "delhi", "sulaymaniyah"]
+                .map((id) => getPlace(id))
+                .filter((p): p is Place => Boolean(p))
+            }
             mode="medical"
             still
             fallbackImage="/destinations/erbil.jpg"
@@ -125,7 +129,7 @@ function Home() {
               <How
                 icon={HeartPulse}
                 title="Travel for care"
-                body="Hospital desks in Erbil, Slemani, Baghdad, plus outbound letters for Istanbul and Amman."
+                body="Stay home when the workup can be done here. Turkey, Jordan, Iran, and India when it cannot — letter first."
               />
             </div>
           </section>

@@ -332,6 +332,8 @@ function CareCard({ offer }: { offer: CareOffer }) {
             ))}
           </div>
           <p className="mt-3 text-xs text-muted">Languages: {offer.languages.join(" · ")}</p>
+          {offer.visa ? <p className="mt-1 text-xs text-faint">{offer.visa}</p> : null}
+          {offer.hop ? <p className="text-xs text-faint">{offer.hop}</p> : null}
         </div>
         <div className="shrink-0 text-right">
           <p className="text-xs text-muted">indicative package</p>

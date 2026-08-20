@@ -152,6 +152,8 @@ export type StayOffer = {
   note: string;
 };
 
+export type CareCorridor = "home" | "turkey" | "jordan" | "iran" | "india";
+
 export type CareOffer = {
   kind: "care";
   id: string;
@@ -164,6 +166,9 @@ export type CareOffer = {
   includes: string[];
   languages: string[];
   note: string;
+  corridor?: CareCorridor;
+  visa?: string;
+  hop?: string;
 };
 
 export type TravelOffer =

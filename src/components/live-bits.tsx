@@ -61,7 +61,7 @@ export function LocalClock() {
 const SOURCE_SETS: Record<string, string[]> = {
   hiking: ["Zagros Mountain Trail", "Kurdistan Outdoors", "Rock Ur Bones", "Choman guides"],
   weekends: ["Booking", "Airbnb", "OpenSooq", "Villa broker"],
-  medical: ["PAR Hospital", "Faruk Medical City", "Doctoury", "Acıbadem"],
+  medical: ["PAR Hospital", "KHCC", "Acıbadem", "Royan", "Medanta", "Doctoury"],
   default: [
     "RideFly",
     "Wego",

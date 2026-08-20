@@ -1,6 +1,7 @@
 import trailsCatalog from "../../../data/trails.json";
 import { buses, flights, hotels, packages, roadNotes } from "./catalog";
 import { cheapest, haversineKm } from "./format";
+import { corridorOfCity } from "./care-corridors";
 import { care, stays } from "./outings";
 import { getPlace, localPlaces } from "./places";
 import type {
@@ -176,9 +177,17 @@ export function searchStays(q: SearchQuery): StayOffer[] {
 }
 
 export function searchCare(q: SearchQuery): CareOffer[] {
-  return care
-    .filter((c) => c.city === q.to || (q.from && c.city === q.from))
-    .sort((a, b) => a.priceUsd - b.priceUsd);
+  const exact = care.filter((c) => c.city === q.to);
+  if (exact.length) return [...exact].sort((a, b) => a.priceUsd - b.priceUsd);
+
+  const corridor = corridorOfCity(q.to);
+  const grouped = corridor ? care.filter((c) => c.corridor === corridor) : [];
+  if (grouped.length) return grouped.sort((a, b) => a.priceUsd - b.priceUsd);
+
+  if (q.from) {
+    return care.filter((c) => c.city === q.from).sort((a, b) => a.priceUsd - b.priceUsd);
+  }
+  return [];
 }
 
 export function searchTravel(q: SearchQuery): TravelOffer[] {

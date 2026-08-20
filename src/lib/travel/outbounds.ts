@@ -1,3 +1,4 @@
+import { corridorOfCity } from "./care-corridors";
 import type { OutboundLink, TravelMode } from "./types";
 import { getPlace } from "./places";
 
@@ -43,6 +44,17 @@ export function hospitalSite(name: string): string | undefined {
     Acıbadem: "https://acibademinternational.com",
     "Abdali Hospital": "https://www.abdalihospital.com/planning-your-trip",
     "Aster & city clinics": "https://www.doctoury.com",
+    "Memorial Şişli": "https://www.memorial.com.tr/en",
+    "Medipol Mega": "https://international.medipol.com.tr",
+    "Güven Hospital": "https://www.guven.com.tr/en",
+    "King Hussein Cancer Center": "https://www.khcc.jo",
+    "Istishari Hospital": "https://www.istisharihospital.com",
+    "Royan Institute": "https://www.royaninstitute.org",
+    "Tehran Heart Center": "https://thc.tums.ac.ir",
+    "Imam Reza Tabriz": "https://www.doctoury.com",
+    Medanta: "https://www.medanta.org",
+    Fortis: "https://www.fortishealthcare.com",
+    "Apollo Chennai": "https://www.apollohospitals.com",
   };
   return pages[name];
 }
@@ -232,11 +244,39 @@ export function outboundsFor(
   }
   if (mode === "hiking") return hikeOutbounds();
   if (mode === "medical") {
+    const corridor = corridorOfCity(query.to);
+    if (corridor === "turkey") {
+      return [
+        { source: "Acıbadem", kind: "hospital", label: "Acıbadem International", url: "https://acibademinternational.com" },
+        { source: "Memorial", kind: "hospital", label: "Memorial", url: "https://www.memorial.com.tr/en" },
+        { source: "Doctoury", kind: "ota", label: "Doctoury (Iraq desk)", url: "https://www.doctoury.com" },
+      ];
+    }
+    if (corridor === "jordan") {
+      return [
+        { source: "KHCC", kind: "hospital", label: "King Hussein Cancer Center", url: "https://www.khcc.jo" },
+        { source: "Abdali", kind: "hospital", label: "Abdali Hospital", url: "https://www.abdalihospital.com/planning-your-trip" },
+        { source: "Doctoury", kind: "ota", label: "Doctoury (Iraq desk)", url: "https://www.doctoury.com" },
+      ];
+    }
+    if (corridor === "iran") {
+      return [
+        { source: "Royan", kind: "hospital", label: "Royan Institute", url: "https://www.royaninstitute.org" },
+        { source: "Tehran Heart Center", kind: "hospital", label: "Tehran Heart Center", url: "https://thc.tums.ac.ir" },
+        { source: "Doctoury", kind: "ota", label: "Doctoury (Iraq desk)", url: "https://www.doctoury.com" },
+      ];
+    }
+    if (corridor === "india") {
+      return [
+        { source: "Medanta", kind: "hospital", label: "Medanta", url: "https://www.medanta.org" },
+        { source: "Apollo", kind: "hospital", label: "Apollo Hospitals", url: "https://www.apollohospitals.com" },
+        { source: "Doctoury", kind: "ota", label: "Doctoury (Iraq desk)", url: "https://www.doctoury.com" },
+      ];
+    }
     return [
       { source: "PAR Hospital", kind: "hospital", label: "PAR Erbil", url: "https://www.parhospital.org" },
       { source: "Faruk Medical City", kind: "hospital", label: "Faruk Medical City", url: "https://www.farukmedicalcity.com" },
-      { source: "Doctoury", kind: "ota", label: "Doctoury (Iraq medical desk)", url: "https://www.doctoury.com" },
-      { source: "Acıbadem", kind: "hospital", label: "Acıbadem International", url: "https://acibademinternational.com" },
+      { source: "Doctoury", kind: "ota", label: "Doctoury — Turkey, Jordan, India", url: "https://www.doctoury.com" },
     ];
   }
   if (mode === "packages") return packageOutbounds();

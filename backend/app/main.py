@@ -56,6 +56,12 @@ NAMES = {
     "shanidar": "Shanidar",
     "alqosh": "Alqosh",
     "istanbul": "Istanbul",
+    "ankara": "Ankara",
+    "tehran": "Tehran",
+    "tabriz": "Tabriz",
+    "delhi": "Delhi",
+    "chennai": "Chennai",
+    "dubai": "Dubai",
     "dubai": "Dubai",
     "amman": "Amman",
 }

@@ -154,6 +154,45 @@ const cityCopy: Record<string, { about: string; tips: string[]; watch: string[] 
     tips: ["Federal Iraq rules apply. Confirm the day’s security note."],
     watch: ["Not inside the KRG e-visa bubble."],
   },
+  istanbul: {
+    about:
+      "Istanbul is the default outbound hospital city from the KRG. Daily metal, Kurdish and Arabic desks, and campuses that already know the Erbil file.",
+    tips: ["Fly EBL–IST. Stay next to the campus, not in Sultanahmet."],
+    watch: ["Confirm the current visa. Get the written plan before you land."],
+  },
+  ankara: {
+    about: "Ankara is the quieter Turkish campus when the named specialist is not in Istanbul.",
+    tips: ["Only go if the letter names Ankara."],
+    watch: ["Usually an IST connection, not a reason to skip Istanbul."],
+  },
+  amman: {
+    about:
+      "Amman is the Arabic-speaking upgrade — King Hussein Cancer Center first, then Abdali and Istishari. Shorter from Baghdad than Istanbul.",
+    tips: ["Send oncology records before you buy RJ. The board reviews the file, not the walk-in."],
+    watch: ["Iraqi passports need a Jordan visa. Start it with the hospital letter."],
+  },
+  tehran: {
+    about:
+      "Tehran is Iraq’s most-used medical city in Iran — Royan for fertility, Heart Center for cardiac. Cash corridor. Iraq is Iran’s largest patient source.",
+    tips: ["Land from Slemani if you can. Bring cash. A Kurdish coordinator earns their fee."],
+    watch: ["Cards often fail. Do not treat transplant offers as a product."],
+  },
+  tabriz: {
+    about: "Tabriz is the close Iran city from the KRG. A land day through Haji Omaran or Bashmakh.",
+    tips: ["Check the crossing the morning you go. Sleep in Tabriz, not at the border."],
+    watch: ["A land corridor, not a tourist weekend."],
+  },
+  delhi: {
+    about:
+      "Delhi is the India campus Iraqi families use when the Turkey quote is too high — Medanta, Fortis. English and Arabic desks.",
+    tips: ["Hospital letter, then e-Medical visa, then the ticket via DXB or DOH. Two weeks."],
+    watch: ["Do not book the flight before the visa. A companion should travel."],
+  },
+  chennai: {
+    about: "Chennai is Apollo’s south campus. Go for a named surgeon, not because the city is cheaper than Delhi.",
+    tips: ["Same visa order as Delhi. Longer flight."],
+    watch: ["Family travel. This is not a four-day hop."],
+  },
 };
 
 const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[] }> = {
@@ -216,10 +255,11 @@ const modeCopy: Record<TravelMode, { title: string; body: string; tips: string[]
   },
   medical: {
     title: "Traveling for care",
-    body: "Erbil and Slemani are the inbound medical cities in the KRG; Baghdad is a referral city if you already have the federal visa. Istanbul and Amman remain the outbound campuses when the case needs a larger hospital.",
+    body: "Stay in Erbil or Slemani when the workup can be done at home. Turkey is the default upgrade campus. Jordan is Arabic oncology, especially from Baghdad. Iran is the land-and-cash hop from Slemani — Iraq is already Iran’s largest patient source. India is cheaper for complex surgery, but the hospital letter and e-Medical visa come before the ticket.",
     tips: [
       "Carry records on a USB and on paper. Coordinators still print.",
       "A written quote before imaging is the difference between a plan and a surprise.",
+      "Do not buy the long-haul until the receiving hospital has accepted the file.",
     ],
   },
 };
