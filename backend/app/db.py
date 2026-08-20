@@ -78,6 +78,24 @@ class OperatorRow(Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
+class ProviderRow(Base):
+    __tablename__ = "gesht_providers"
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    side: Mapped[str] = mapped_column(String(24))
+    name: Mapped[str] = mapped_column(String(200))
+    city: Mapped[str] = mapped_column(String(80))
+    kind: Mapped[str] = mapped_column(String(32))
+    whatsapp: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    website: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    instagram: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    tier: Mapped[str] = mapped_column(String(24), default="free")
+    fee_iqd: Mapped[int] = mapped_column(default=0)
+    club: Mapped[bool] = mapped_column(default=False)
+    claimed: Mapped[bool] = mapped_column(default=False)
+    inventory: Mapped[str] = mapped_column(Text, default="")
+    note: Mapped[str] = mapped_column(Text, default="")
+
+
 def load_json(name: str):
     path = DATA / name
     return json.loads(path.read_text()) if path.exists() else []

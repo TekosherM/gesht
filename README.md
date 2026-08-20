@@ -8,27 +8,37 @@ Search opens the same query on Wego, Kayak, Skyscanner, Almosafer, RideFly, Book
 
 ## Backend and database
 
-Two layers. They share the same Postgres shape.
+**Neon** is the Postgres. **GCP Cloud Run** is FastAPI. **Vercel** is the site. One `DATABASE_URL`. Not Firebase.
 
-| Layer | What | Default now | Production |
-|---|---|---|---|
-| **App (Vercel)** | TanStack Start, auth, UI | Embedded **PGLite** (Postgres in WASM) | Set `DATABASE_URL` → **Neon or Supabase Postgres** |
-| **API** | **FastAPI** + SQLAlchemy (`backend/`) | **SQLite** file `backend/gesht.db` | Same `DATABASE_URL` → **Supabase/Neon Postgres** |
+| Layer | Where | Env |
+|---|---|---|
+| Site + auth | Vercel | `DATABASE_URL` (Neon **pooled** URI) |
+| API | Cloud Run (`gesht-api`) | same `DATABASE_URL`, `ALLOWED_ORIGINS` |
+| Proxy | Vercel `/api/gesht/*` | `GESHT_API_URL` = Cloud Run URL |
 
-- Schema: `migrations/0001_auth.sql` (Better Auth), `0002_gesht.sql` (trails, groups, operators), `0003_providers.sql` (supply desks + leads).
-- Seed: `data/trails.json`, `groups.json`, `operators.json`, `sources.json`. FastAPI `init_db()` upserts these on boot.
-- Research dump (not yet the live seed): `data/iraq-kurdistan-hiking-catalog.json`.
-- Search on Vercel still runs from TypeScript catalogs so the site works without the API. FastAPI on `:8788` is the richer path (`/api/gesht/search`, groups, outbounds).
+Until those env vars exist, the site keeps working: PGLite for auth, TypeScript catalogs for search, SQLite for local FastAPI.
+
+### 1. Neon (you do this once)
+
+1. [console.neon.tech](https://console.neon.tech) → New project → name `gesht` → region close to `europe-west1` or `iad`.
+2. Dashboard → Connection string → **Pooled** (contains `-pooler`). Copy it.
+3. Vercel project **gesht** → Settings → Environment Variables:
+   - `DATABASE_URL` = that pooled URI (Production + Preview)
+4. Redeploy. `npm run build` already runs `scripts/migrate.mjs` against Neon.
+
+### 2. Cloud Run (your existing GCP project)
 
 ```bash
-# API locally
-cd /workspace && backend/.venv/bin/uvicorn backend.app.main:app --host 127.0.0.1 --port 8788
-
-# Point both layers at Supabase
-export DATABASE_URL="postgresql://USER:PASS@HOST:5432/postgres"
+export GCP_PROJECT=your-gcp-project-id
+export DATABASE_URL='postgresql://USER:PASS@ep-….neon.tech/neondb?sslmode=require'
+chmod +x infra/cloud-run.sh
+./infra/cloud-run.sh
 ```
 
-No Supabase project is wired yet. The schema is Postgres-ready; empty `DATABASE_URL` keeps the preview self-contained.
+Then set Vercel `GESHT_API_URL` to the printed `https://gesht-api-….run.app` and redeploy.
+
+Local API without Neon still uses `backend/gesht.db`.
+
 
 ## Develop
 

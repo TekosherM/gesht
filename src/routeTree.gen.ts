@@ -14,6 +14,7 @@ import { Route as ForProvidersRouteImport } from './routes/for-providers'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiGeshtSplatRouteImport } from './routes/api/gesht/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +41,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGeshtSplatRoute = ApiGeshtSplatRouteImport.update({
+  id: '/api/gesht/$',
+  path: '/api/gesht/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/gesht/$': typeof ApiGeshtSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/gesht/$': typeof ApiGeshtSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,33 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/search': typeof SearchRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/gesht/$': typeof ApiGeshtSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/for-providers' | '/login' | '/search' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/for-providers'
+    | '/login'
+    | '/search'
+    | '/api/auth/$'
+    | '/api/gesht/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/for-providers' | '/login' | '/search' | '/api/auth/$'
-  id: '__root__' | '/' | '/for-providers' | '/login' | '/search' | '/api/auth/$'
+  to:
+    | '/'
+    | '/for-providers'
+    | '/login'
+    | '/search'
+    | '/api/auth/$'
+    | '/api/gesht/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/for-providers'
+    | '/login'
+    | '/search'
+    | '/api/auth/$'
+    | '/api/gesht/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +105,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SearchRoute: typeof SearchRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiGeshtSplatRoute: typeof ApiGeshtSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/gesht/$': {
+      id: '/api/gesht/$'
+      path: '/api/gesht/$'
+      fullPath: '/api/gesht/$'
+      preLoaderRoute: typeof ApiGeshtSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SearchRoute: SearchRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiGeshtSplatRoute: ApiGeshtSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

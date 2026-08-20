@@ -1,15 +1,18 @@
 from __future__ import annotations
 
+import os
+
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from .db import SessionLocal, init_db
+from .db import SessionLocal, init_db, url as db_url
 from .search import groups_for, operators_for, outbounds_for, search_trails, sources_for
 
-app = FastAPI(title="Gesht", version="0.2.0")
+app = FastAPI(title="Gesht", version="0.3.0")
+origins = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins or ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -74,7 +77,8 @@ def startup() -> None:
 
 @app.get("/api/gesht/health")
 def health():
-    return {"ok": True, "service": "gesht", "db": "postgres-ready"}
+    kind = "postgres" if db_url.startswith("postgresql") else "sqlite"
+    return {"ok": True, "service": "gesht", "db": kind}
 
 
 @app.get("/api/gesht/search")
