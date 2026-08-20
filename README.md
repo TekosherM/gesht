@@ -15,6 +15,13 @@ npm run dev
 
 The FastAPI service starts with `startup.sh` (or `uvicorn backend.app.main:app`).
 
+## Test
+
+```bash
+npm test              # unit + 1000 Gesht scenarios
+npm run test:gesht    # scenarios + Playwright e2e against :8080
+```
+
 ## Build
 
 ```bash

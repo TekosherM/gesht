@@ -25,6 +25,7 @@ export function searchFlights(q: SearchQuery): FlightOffer[] {
   const origin = q.from;
   if (!origin) return [];
   const dest = q.to;
+  if (origin === dest) return [];
   const rows = flights.filter((f) => f.from === origin && f.to === dest);
   if (rows.length) return [...rows].sort((a, b) => cheapest(a.sources) - cheapest(b.sources));
 
@@ -59,13 +60,34 @@ export function searchFlights(q: SearchQuery): FlightOffer[] {
       ],
     });
   }
-  return synthesized.sort((a, b) => cheapest(a.sources) - cheapest(b.sources));
+  if (synthesized.length) {
+    return synthesized.sort((a, b) => cheapest(a.sources) - cheapest(b.sources));
+  }
+
+  const reverse = flights.filter((f) => f.from === dest && f.to === origin);
+  return reverse
+    .map((f) => ({
+      ...f,
+      id: `${f.id}-opp`,
+      from: origin,
+      to: dest,
+    }))
+    .sort((a, b) => cheapest(a.sources) - cheapest(b.sources));
 }
 
 export function searchHotels(q: SearchQuery): HotelOffer[] {
   const nights = nightsBetween(q.depart, q.returnDate);
-  return hotels
-    .filter((h) => h.city === q.to)
+  const exact = hotels.filter((h) => h.city === q.to);
+  const nearby =
+    exact.length === 0
+      ? hotels.filter((h) => {
+          const dest = getPlace(q.to);
+          const city = getPlace(h.city);
+          if (!dest || !city) return false;
+          return haversineKm(dest, city) < 90;
+        })
+      : [];
+  return [...exact, ...nearby]
     .sort((a, b) => a.nightlyUsd - b.nightlyUsd)
     .map((h) => ({
       ...h,
@@ -85,6 +107,7 @@ export function searchCars(q: SearchQuery): CarOffer[] {
   const from = getPlace(q.from);
   const to = getPlace(q.to);
   if (!from || !to) return [];
+  if (from.id === to.id) return [];
   if (from.region === "gateway" || to.region === "gateway") return [];
 
   const key = pairKey(from.id, to.id);

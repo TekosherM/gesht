@@ -212,8 +212,15 @@ export function outboundsFor(
   const dest = getPlace(query.to);
   const origin = query.from ? getPlace(query.from) : undefined;
   const destName = dest?.name ?? query.to;
-  if (mode === "flights" && origin?.iata && dest?.iata) {
-    return flightOutbounds(origin.iata, dest.iata, query.depart, query.guests, query.returnDate);
+  if (mode === "flights") {
+    if (origin?.iata && dest?.iata) {
+      return flightOutbounds(origin.iata, dest.iata, query.depart, query.guests, query.returnDate);
+    }
+    return [
+      { source: "Wego", kind: "ota", label: "Open Wego", url: "https://www.wego.com/flights" },
+      { source: "Kayak", kind: "ota", label: "Open Kayak", url: "https://www.kayak.com/flights" },
+      { source: "RideFly", kind: "ota", label: "Open RideFly (Iraq, IQD)", url: "https://ridefly.com.iq/en/" },
+    ];
   }
   if (mode === "hotels") {
     return hotelOutbounds(destName, query.depart, query.returnDate, query.guests, query.rooms);
