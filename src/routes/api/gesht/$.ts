@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 
 function apiBase() {
   const raw = process.env.GESHT_API_URL?.trim();
-  return raw ? raw.replace(/\/$/, "") : "";
+  if (raw) return raw.replace(/\/$/, "");
+  // Local preview: FastAPI on 8788 (Neon when DATABASE_URL is set).
+  if (process.env.NODE_ENV !== "production") return "http://127.0.0.1:8788";
+  return "";
 }
 
 async function proxy(request: Request) {
